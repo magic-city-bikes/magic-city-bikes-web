@@ -16,6 +16,8 @@ function initializeGoogleMaps() {
   }
 
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions)
+
+  getUserGPSLocation()
 }
 
 
@@ -42,13 +44,13 @@ function createStation(stationObject) {
       icon: {
         path: 'M10,0 C4.47743652,0 -5.68434189e-14,4.47712722 -5.68434189e-14,10 C-5.68434189e-14,19.2282948 10,28.809811 10,28.809811 C10,28.809811 20,18.2592558 20,9.9996907 C20,4.47712722 15.5225635,0 10,0',
         fillColor: '#ff0000',
+        anchor: new google.maps.Point(0, -10),
         fillOpacity: 1,
         strokeWeight: 0,
         scale: 1
       },
       labelClass: 'labels',
-      labelContent: labelContent,
-      labelAnchor: new google.maps.Point(10,10)
+      labelContent: labelContent
     })
   }
   drawStation()
@@ -71,6 +73,51 @@ function getJSON(url, callback) {
   request = null
 }
 
+function geolocationSuccess(position) {
+  function createAccuracyCircle() {
+    new google.maps.Circle({
+      center: userLatLng,
+      radius: position.coords.accuracy,
+      map: map,
+      clickable: false,
+      fillColor: "#aaddff",
+      fillOpacity: 0.6,
+      strokeColor: "#7bc8ff",
+      strokeOpacity: 0.8,
+      strokeWeight: 1
+    })
+  }
+
+  var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+
+  new google.maps.Marker({
+    position: userLatLng,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 5,
+      strokeOpacity: 0,
+      fillOpacity: 0.95,
+      fillColor: "#40b3ff"
+    },
+    map: map
+  })
+
+  map.panTo(userLatLng)
+  createAccuracyCircle()
+}
+
+function getUserGPSLocation() {
+  var geolocationOptions = {
+    enableHighAccuracy: true,
+    timeout: 60 * 1000,
+    maximumAge: 30
+  }
+
+  navigator.geolocation.getCurrentPosition(geolocationSuccess, function(){}, geolocationOptions)
+}
+
+
+
 function toggleMapMode(mode) {
   // .bikes-available
   // .spaces-available
@@ -87,6 +134,8 @@ function toggleMapMode(mode) {
     toBeShownElements[i].classList.remove('hidden')
   }
 }
+
+
 
 function toggleMode() {
   function toggleButtonStates(element) {

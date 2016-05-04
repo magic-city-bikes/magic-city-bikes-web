@@ -35,6 +35,7 @@ function refreshStationCache() {
     }
   `).then(result => {
     stationCache = result
+    // spacesavailable on kokonaismäärä, siit miinus
     setTimeout(refreshStationCache, 10 * 1000)
   })
 }
