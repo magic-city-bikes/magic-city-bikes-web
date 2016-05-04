@@ -24,7 +24,7 @@ function initializeGoogleMaps() {
 function createStation(stationObject) {
   function createLabelElement() {
     var countElement = document.createElement('div')
-    countElement.className = 'line-number'
+    countElement.className = 'count'
     var countContent =
       '<span class="spaces-available hidden">' + stationObject.spacesAvailable + '</span>'+
       '<span class="bikes-available">' + stationObject.bikesAvailable + '</span>'
@@ -43,7 +43,7 @@ function createStation(stationObject) {
       map: map,
       icon: {
         path: 'M10,0 C4.47743652,0 -5.68434189e-14,4.47712722 -5.68434189e-14,10 C-5.68434189e-14,19.2282948 10,28.809811 10,28.809811 C10,28.809811 20,18.2592558 20,9.9996907 C20,4.47712722 15.5225635,0 10,0',
-        fillColor: '#ff0000',
+        fillColor: 'green',
         anchor: new google.maps.Point(0, -10),
         fillOpacity: 1,
         strokeWeight: 0,

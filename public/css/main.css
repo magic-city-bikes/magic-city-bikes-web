@@ -58,6 +58,16 @@ a {
   display: none;
 }
 
+.count {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  padding-top: 10px;
+  width: 20px;
+  text-align: center;
+  display: inline-block;
+}
+
 /*  <div id="mode-buttons">
     <div id="rent-button">
       Lainaan
