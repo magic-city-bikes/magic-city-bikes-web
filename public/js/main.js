@@ -23,7 +23,7 @@ function createStation(stationObject) {
   function createLabelElement() {
     var countElement = document.createElement('div')
     countElement.className = 'line-number'
-    countElement.textContent = stationObject.line || 123
+    countElement.innerHTML = 'spaces: ' + stationObject.spacesAvailable + '<br>bikes: ' + stationObject.bikesAvailable + '<br>name: ' + stationObject.name
 
     return countElement.outerHTML
   }
@@ -69,7 +69,7 @@ function getJSON(url, callback) {
 function initializeApp() {
   initializeGoogleMaps()
   getJSON('http://localhost:3000/api/stations', function(data) {
-    _.map(data.data.bikeRentalStations, createStation)
+    _.map(data.bikeRentalStations, createStation)
   })
 }
 
