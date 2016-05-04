@@ -32,20 +32,26 @@ a {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: green;
 }
 
 #rent-button, #return-button {
+  background: green;
   width: 50%;
   height: 4em;
   display: inline-block;
-  border-top: 0.5em solid red;
+  border-top: 0.5em solid lightgreen;
   text-align: center;
   line-height: 3em;
   float: left;
+  cursor: pointer;
+  color: white;
+}
+#rent-button.button-active, #return-button.button-active {
+  background: lightgreen;
+  border-color: darkgreen;
 }
 #rent-button {
-  border-right: 0.1em solid yellow;
+  border-right: 0.1em solid lightgreen;
 }
 
 /*  <div id="mode-buttons">

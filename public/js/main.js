@@ -66,11 +66,21 @@ function getJSON(url, callback) {
   request = null
 }
 
+function toggleMode() {
+  console.log('click')
+}
+
+function addButtonListeners() {
+  document.getElementById("rent-button").addEventListener("click", toggleMode, false)
+  document.getElementById("return-button").addEventListener("click", toggleMode, false)
+}
+
 function initializeApp() {
   initializeGoogleMaps()
   getJSON('/api/stations', function(data) {
     _.map(data.bikeRentalStations, createStation)
   })
+  addButtonListeners()
 }
 
 function ready(fn) {
