@@ -44,12 +44,13 @@ function createStation(stationObject) {
       icon: {
         path: 'M10,0 C4.47743652,0 -5.68434189e-14,4.47712722 -5.68434189e-14,10 C-5.68434189e-14,19.2282948 10,28.809811 10,28.809811 C10,28.809811 20,18.2592558 20,9.9996907 C20,4.47712722 15.5225635,0 10,0',
         fillColor: 'green',
-        anchor: new google.maps.Point(0, -10),
+        anchor: new google.maps.Point(10, 30),
         fillOpacity: 1,
-        strokeWeight: 0,
-        scale: 1
+        scale: 1.5,
+        strokeWeight: 0
       },
       labelClass: 'labels',
+      labelAnchor: new google.maps.Point(15, 37),
       labelContent: labelContent
     })
   }
@@ -120,13 +121,11 @@ function getUserGPSLocation() {
     timeout: 60 * 1000,
     maximumAge: 30
   }
-
+  console.log('asd')
   navigator.geolocation.getCurrentPosition(geolocationSuccess, function(){}, geolocationOptions)
 }
 
 function toggleMapMode(mode) {
-  // .bikes-available
-  // .spaces-available
   var modeIsRent = mode === 'rent-button'
   var toBeHidden = modeIsRent ? '.spaces-available' : '.bikes-available'
   var toBeShown = modeIsRent ? '.bikes-available' : '.spaces-available'
