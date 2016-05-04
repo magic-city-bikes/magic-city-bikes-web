@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100%;
   width: 100%;
@@ -22,3 +26,33 @@ a {
   height: inherit;
 }
 
+#mode-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: green;
+}
+
+#rent-button, #return-button {
+  width: 50%;
+  height: 4em;
+  display: inline-block;
+  border-top: 0.5em solid red;
+  text-align: center;
+  line-height: 3em;
+  float: left;
+}
+#rent-button {
+  border-right: 0.1em solid yellow;
+}
+
+/*  <div id="mode-buttons">
+    <div id="rent-button">
+      Lainaan
+    </div>
+    <div id="return-button">
+      Palautan
+    </div>
+  </div>*/
