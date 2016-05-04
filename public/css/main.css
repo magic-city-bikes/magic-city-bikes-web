@@ -54,6 +54,10 @@ a {
   border-right: 0.1em solid lightgreen;
 }
 
+.hidden {
+  display: none;
+}
+
 /*  <div id="mode-buttons">
     <div id="rent-button">
       Lainaan

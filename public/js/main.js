@@ -23,7 +23,11 @@ function createStation(stationObject) {
   function createLabelElement() {
     var countElement = document.createElement('div')
     countElement.className = 'line-number'
-    countElement.innerHTML = 'spaces: ' + stationObject.spacesAvailable + '<br>bikes: ' + stationObject.bikesAvailable + '<br>name: ' + stationObject.name
+    console.log(stationObject.bikesAvailable, stationObject.spacesAvailable)
+    var countContent =
+      '<span class="spaces-available hidden">' + stationObject.spacesAvailable + '</span>'+
+      '<span class="bikes-available">' + stationObject.bikesAvailable + '</span>'
+    countElement.innerHTML = countContent
 
     return countElement.outerHTML
   }
@@ -66,23 +70,48 @@ function getJSON(url, callback) {
   request = null
 }
 
-function toggleMode(e) {
-  var isActiveMode = this.classList.contains('button-active')
+function toggleMapMode(mode) {
+  // .bikes-available
+  // .spaces-available
+  var toBeHidden = mode === 'rent-button' ? '.spaces-available' : '.bikes-available'
+  var toBeShown = mode === 'rent-button' ? '.bikes-available' : '.spaces-available'
 
-  if (!isActiveMode) {
+  var toBeHiddenElements = document.querySelectorAll(toBeHidden)
+  var toBeShownElements = document.querySelectorAll(toBeShown)
+
+  for(var i = 0; i < toBeHiddenElements.length; i++){
+    toBeHiddenElements[i].classList.add('hidden')
+  }
+  for(var i = 0; i < toBeShownElements.length; i++){
+    toBeShownElements[i].classList.remove('hidden')
+  }
+}
+
+function toggleMode() {
+  function toggleButtonStates(element) {
     var buttons = document.querySelectorAll('.mode-button')
 
     for(var i = 0; i < buttons.length; i++){
       buttons[i].classList.remove('button-active')
     }
 
-    this.classList.add('button-active')
+    element.classList.add('button-active')
+  }
+
+
+  var isActiveMode = this.classList.contains('button-active')
+  if (!isActiveMode) {
+    var mode = this.getAttribute('id')
+    toggleButtonStates(this) // cleanup this
+    toggleMapMode(mode)
   }
 }
 
 function addButtonListeners() {
-  document.getElementById("rent-button").addEventListener("click", toggleMode, false)
-  document.getElementById("return-button").addEventListener("click", toggleMode, false)
+  var rentButton = document.getElementById("rent-button")
+  var returnButton = document.getElementById("return-button")
+  rentButton.addEventListener("click", toggleMode, false)
+  returnButton.addEventListener("click", toggleMode, false)
 }
 
 function initializeApp() {
