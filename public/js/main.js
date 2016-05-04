@@ -66,8 +66,18 @@ function getJSON(url, callback) {
   request = null
 }
 
-function toggleMode() {
-  console.log('click')
+function toggleMode(e) {
+  var isActiveMode = this.classList.contains('button-active')
+
+  if (!isActiveMode) {
+    var buttons = document.querySelectorAll('.mode-button')
+
+    for(var i = 0; i < buttons.length; i++){
+      buttons[i].classList.remove('button-active')
+    }
+
+    this.classList.add('button-active')
+  }
 }
 
 function addButtonListeners() {

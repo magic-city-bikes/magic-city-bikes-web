@@ -44,3 +44,5 @@ app.listen(port, () => {
   console.log(`Tsygät.fi listening on *:${port}`)
   refreshStationCache()
 })
+
+// Tallenna Juusolle data
