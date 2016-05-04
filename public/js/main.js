@@ -73,37 +73,45 @@ function getJSON(url, callback) {
   request = null
 }
 
-function geolocationSuccess(position) {
-  function createAccuracyCircle() {
-    new google.maps.Circle({
-      center: userLatLng,
-      radius: position.coords.accuracy,
-      map: map,
-      clickable: false,
-      fillColor: "#aaddff",
-      fillOpacity: 0.6,
-      strokeColor: "#7bc8ff",
-      strokeOpacity: 0.8,
-      strokeWeight: 1
-    })
+function outsideOperationTheatre(position) {
+  var theatreWestSouthPoint = {
+    lat: 60.152162,
+    lng: 24.910469
+  }
+  var theatreEastNorthPoint = {
+    lat: 60.191951,
+    lng: 24.985142
   }
 
+  var latMin = theatreWestSouthPoint.lat
+  var latMax = theatreEastNorthPoint.lat
+  var lngMin = theatreWestSouthPoint.lng
+  var lngMax = theatreEastNorthPoint.lng
+
+  var latInside = position.coords.latitude <= latMax && position.coords.latitude >= latMin
+  var lngInside = position.coords.longitude <= lngMax && position.coords.longitude >= lngMin
+
+  return !latInside && !lngInside
+}
+
+function geolocationSuccess(position) {
   var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
 
   new google.maps.Marker({
     position: userLatLng,
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
-      scale: 5,
-      strokeOpacity: 0,
+      scale: 10,
       fillOpacity: 0.95,
-      fillColor: "#40b3ff"
+      fillColor: "#40b3ff",
+      strokeOpacity: 0
     },
     map: map
   })
 
-  map.panTo(userLatLng)
-  createAccuracyCircle()
+  if (!outsideOperationTheatre(position)) {
+    map.panTo(userLatLng)
+  }
 }
 
 function getUserGPSLocation() {
@@ -116,13 +124,12 @@ function getUserGPSLocation() {
   navigator.geolocation.getCurrentPosition(geolocationSuccess, function(){}, geolocationOptions)
 }
 
-
-
 function toggleMapMode(mode) {
   // .bikes-available
   // .spaces-available
-  var toBeHidden = mode === 'rent-button' ? '.spaces-available' : '.bikes-available'
-  var toBeShown = mode === 'rent-button' ? '.bikes-available' : '.spaces-available'
+  var modeIsRent = mode === 'rent-button'
+  var toBeHidden = modeIsRent ? '.spaces-available' : '.bikes-available'
+  var toBeShown = modeIsRent ? '.bikes-available' : '.spaces-available'
 
   var toBeHiddenElements = document.querySelectorAll(toBeHidden)
   var toBeShownElements = document.querySelectorAll(toBeShown)
@@ -134,8 +141,6 @@ function toggleMapMode(mode) {
     toBeShownElements[i].classList.remove('hidden')
   }
 }
-
-
 
 function toggleMode() {
   function toggleButtonStates(element) {
@@ -167,6 +172,8 @@ function addButtonListeners() {
 function initializeApp() {
   initializeGoogleMaps()
   getJSON('/api/stations', function(data) {
+// handle no data from server
+
     _.map(data.bikeRentalStations, createStation)
   })
   addButtonListeners()
@@ -180,3 +187,5 @@ function ready(fn) {
   }
 }
 ready(initializeApp)
+
+
