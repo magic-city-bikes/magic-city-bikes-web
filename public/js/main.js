@@ -68,7 +68,7 @@ function getJSON(url, callback) {
 
 function initializeApp() {
   initializeGoogleMaps()
-  getJSON('http://localhost:3000/api/stations', function(data) {
+  getJSON('/api/stations', function(data) {
     _.map(data.bikeRentalStations, createStation)
   })
 }
