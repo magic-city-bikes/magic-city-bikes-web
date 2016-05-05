@@ -79,6 +79,7 @@ small {
   background: #4A4A4A;
   color: white;
   display: none;
+  opacity: 0.95;
 }
 
 .description-container {
