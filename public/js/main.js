@@ -7,6 +7,7 @@ var map = null
 
 function initializeGoogleMaps() {
   var styles = [{"featureType": "all", "elementType": "labels.text.fill", "stylers": [{"saturation": 36 }, {"color": "#333333"}, {"lightness": 40 } ] }, {"featureType": "all", "elementType": "labels.text.stroke", "stylers": [{"visibility": "on"}, {"color": "#ffffff"}, {"lightness": 16 } ] }, {"featureType": "all", "elementType": "labels.icon", "stylers": [{"visibility": "off"} ] }, {"featureType": "administrative", "elementType": "geometry.fill", "stylers": [{"color": "#fefefe"}, {"lightness": 20 } ] }, {"featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{"color": "#fefefe"}, {"lightness": 17 }, {"weight": 1.2 } ] }, {"featureType": "landscape", "elementType": "geometry", "stylers": [{"color": "#f5f5f5"}, {"lightness": 20 } ] }, {"featureType": "poi", "elementType": "geometry", "stylers": [{"color": "#f5f5f5"}, {"lightness": 21 } ] }, {"featureType": "poi.park", "elementType": "geometry", "stylers": [{"color": "#ccedc8"}, {"lightness": 21 } ] }, {"featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{"color": "#ffffff"}, {"lightness": 17 } ] }, {"featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{"color": "#ffffff"}, {"lightness": 29 }, {"weight": 0.2 } ] }, {"featureType": "road.arterial", "elementType": "geometry", "stylers": [{"color": "#ffffff"}, {"lightness": 18 } ] }, {"featureType": "road.local", "elementType": "geometry", "stylers": [{"color": "#ffffff"}, {"lightness": 16 } ] }, {"featureType": "transit", "elementType": "geometry", "stylers": [{"color": "#f2f2f2"}, {"lightness": 19 } ] }, {"featureType": "water", "elementType": "geometry", "stylers": [{"color": "#e9e9e9"}, {"lightness": 17 } ] }, {"featureType": "water", "elementType": "geometry.fill", "stylers": [{"color": "#e0eff8"} ] } ]
+
   var mapOptions = {
     center: new google.maps.LatLng(defaultUserSettings.lat, defaultUserSettings.lng),
     zoom: defaultUserSettings.zoom,
@@ -25,6 +26,7 @@ function createStation(stationObject) {
   function createLabelElement() {
     var countElement = document.createElement('div')
     countElement.className = 'count'
+
     var countContent =
       '<span class="spaces-available hidden">' + stationObject.spacesAvailable + '</span>'+
       '<span class="bikes-available">' + stationObject.bikesAvailable + '</span>'
@@ -34,26 +36,52 @@ function createStation(stationObject) {
   }
 
   function drawStation() {
-    var labelContent = document.createElement('div')
-    labelContent.className = 'data-stationId-' + stationObject.id
-    labelContent.innerHTML = createLabelElement()
+    function getFillColor(available) {
+      if (available >= 5 ) {
+        return 'green'
+      } else if (available >= 2) {
+        return 'yellow'
+      } else if (available < 2) {
+        return 'red'
+      }
+    }
+
+    var spacesAvailable = parseInt(stationObject.spacesAvailable)
+    var bikesAvailable = parseInt(stationObject.bikesAvailable)
 
     new MarkerWithLabel({
       position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
       map: map,
       icon: {
         path: 'M10,0 C4.47743652,0 -5.68434189e-14,4.47712722 -5.68434189e-14,10 C-5.68434189e-14,19.2282948 10,28.809811 10,28.809811 C10,28.809811 20,18.2592558 20,9.9996907 C20,4.47712722 15.5225635,0 10,0',
-        fillColor: 'green',
-        anchor: new google.maps.Point(10, 30),
+        fillColor: 'orange',
+        anchor: new google.maps.Point(10, 28),
         fillOpacity: 1,
-        scale: 1.5,
+        scale: 1.2,
         strokeWeight: 0
       },
-      labelClass: 'labels',
+      labelClass: 'spaces',
       labelAnchor: new google.maps.Point(15, 37),
-      labelContent: labelContent
+      labelContent: '<div class="count spaces-available hidden">' + stationObject.spacesAvailable + '</div>'
+    })
+
+    new MarkerWithLabel({
+      position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
+      map: map,
+      icon: {
+        path: 'M10,0 C4.47743652,0 -5.68434189e-14,4.47712722 -5.68434189e-14,10 C-5.68434189e-14,19.2282948 10,28.809811 10,28.809811 C10,28.809811 20,18.2592558 20,9.9996907 C20,4.47712722 15.5225635,0 10,0',
+        fillColor: getFillColor(bikesAvailable),
+        anchor: new google.maps.Point(10, 28),
+        fillOpacity: 1,
+        scale: 1.2,
+        strokeWeight: 0
+      },
+      labelClass: 'bikes',
+      labelAnchor: new google.maps.Point(15, 37),
+      labelContent: '<div class="count bikes-available">' + stationObject.bikesAvailable + '</div>'
     })
   }
+
   drawStation()
 }
 
@@ -103,8 +131,8 @@ function geolocationSuccess(position) {
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 10,
-      fillOpacity: 0.95,
-      fillColor: "#40b3ff",
+      fillOpacity: 0.9,
+      fillColor: '#40b3ff',
       strokeOpacity: 0
     },
     map: map
@@ -172,7 +200,7 @@ function initializeApp() {
   initializeGoogleMaps()
   getJSON('/api/stations', function(data) {
 // handle no data from server
-
+// joku intervalli toho datan refreshii
     _.map(data.bikeRentalStations, createStation)
   })
   addButtonListeners()
