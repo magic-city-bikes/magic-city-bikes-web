@@ -75,8 +75,7 @@ small {
   right: 0;
   top: 0;
   bottom: 0;
-  min-width: 220px;
-  max-width: 400px;
+  width: 320px;
   background: #4A4A4A;
   color: white;
   padding: 2em 2em 1em 1.5em;
