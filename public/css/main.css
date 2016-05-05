@@ -35,7 +35,8 @@ a {
 }
 
 #rent-button, #return-button {
-  background: green;
+  background: #4A4A4A;
+  color: #9B9B9B;
   width: 50%;
   height: 4em;
   display: inline-block;
@@ -43,11 +44,13 @@ a {
   text-align: center;
   float: left;
   cursor: pointer;
-  color: white;
+  border-bottom: 0.3em solid #4A4A4A;
+  transition: all 0.2s ease-in-out;
 }
 #rent-button.button-active, #return-button.button-active {
-  background: lightgreen;
-  border-color: darkgreen;
+  color: #FCBC19;
+  background: #fff;
+  border-color: #FCBC19;
 }
 small {
   display: inline-block;
@@ -58,7 +61,7 @@ small {
 }
 
 .count {
-  color: white;
+  color: #4A4A4A;
   font-weight: bold;
   font-size: 14px;
   width: 30px;

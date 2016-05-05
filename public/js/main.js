@@ -1,12 +1,13 @@
-var defaultUserSettings = {
-  lat: 60.1729721445,
-  lng: 24.9399946767,
-  zoom: 15
-}
 var map = null
 
 function initializeGoogleMaps() {
-  var styles = [{"featureType": "all", "elementType": "labels.text.fill", "stylers": [{"saturation": 36 }, {"color": "#333333"}, {"lightness": 40 } ] }, {"featureType": "all", "elementType": "labels.text.stroke", "stylers": [{"visibility": "on"}, {"color": "#ffffff"}, {"lightness": 16 } ] }, {"featureType": "all", "elementType": "labels.icon", "stylers": [{"visibility": "off"} ] }, {"featureType": "administrative", "elementType": "geometry.fill", "stylers": [{"color": "#fefefe"}, {"lightness": 20 } ] }, {"featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{"color": "#fefefe"}, {"lightness": 17 }, {"weight": 1.2 } ] }, {"featureType": "landscape", "elementType": "geometry", "stylers": [{"color": "#f5f5f5"}, {"lightness": 20 } ] }, {"featureType": "poi", "elementType": "geometry", "stylers": [{"color": "#f5f5f5"}, {"lightness": 21 } ] }, {"featureType": "poi.park", "elementType": "geometry", "stylers": [{"color": "#ccedc8"}, {"lightness": 21 } ] }, {"featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{"color": "#ffffff"}, {"lightness": 17 } ] }, {"featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{"color": "#ffffff"}, {"lightness": 29 }, {"weight": 0.2 } ] }, {"featureType": "road.arterial", "elementType": "geometry", "stylers": [{"color": "#ffffff"}, {"lightness": 18 } ] }, {"featureType": "road.local", "elementType": "geometry", "stylers": [{"color": "#ffffff"}, {"lightness": 16 } ] }, {"featureType": "transit", "elementType": "geometry", "stylers": [{"color": "#f2f2f2"}, {"lightness": 19 } ] }, {"featureType": "water", "elementType": "geometry", "stylers": [{"color": "#e9e9e9"}, {"lightness": 17 } ] }, {"featureType": "water", "elementType": "geometry.fill", "stylers": [{"color": "#e0eff8"} ] } ]
+  var styles = [{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#d3d3d3"}]},{"featureType":"transit","stylers":[{"color":"#808080"},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#b3b3b3"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"weight":1.8}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"color":"#d7d7d7"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ebebeb"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"color":"#a7a7a7"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"landscape","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#efefef"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#696969"}]},{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"visibility":"on"},{"color":"#737373"}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"geometry.stroke","stylers":[{"color":"#d6d6d6"}]},{"featureType":"road","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"color":"#dadada"}]}]
+
+  var defaultUserSettings = {
+    lat: 60.1729721445,
+    lng: 24.9399946767,
+    zoom: 15
+  }
 
   var mapOptions = {
     center: new google.maps.LatLng(defaultUserSettings.lat, defaultUserSettings.lng),
@@ -16,73 +17,37 @@ function initializeGoogleMaps() {
     styles: styles
   }
 
-  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions)
+  var mapElement = document.getElementById('map-canvas')
+  map = new google.maps.Map(mapElement, mapOptions)
 
   getUserGPSLocation()
 }
 
 
 function createStation(stationObject) {
-  function createLabelElement() {
-    var countElement = document.createElement('div')
-    countElement.className = 'count'
-
-    var countContent =
-      '<span class="spaces-available hidden">' + stationObject.spacesAvailable + '</span>'+
-      '<span class="bikes-available">' + stationObject.bikesAvailable + '</span>'
-    countElement.innerHTML = countContent
-
-    return countElement.outerHTML
-  }
-
-  function drawStation() {
-    function getFillColor(available) {
-      if (available >= 5 ) {
-        return 'green'
-      } else if (available >= 2) {
-        return 'yellow'
-      } else if (available < 2) {
-        return 'red'
-      }
-    }
-
-    var spacesAvailable = parseInt(stationObject.spacesAvailable)
-    var bikesAvailable = parseInt(stationObject.bikesAvailable)
-
+  function createStationMarker(color, labelContent) {
     new MarkerWithLabel({
       position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
       map: map,
       icon: {
         path: 'M10,0 C4.47743652,0 -5.68434189e-14,4.47712722 -5.68434189e-14,10 C-5.68434189e-14,19.2282948 10,28.809811 10,28.809811 C10,28.809811 20,18.2592558 20,9.9996907 C20,4.47712722 15.5225635,0 10,0',
-        fillColor: 'orange',
+        fillColor: color,
         anchor: new google.maps.Point(10, 28),
         fillOpacity: 1,
         scale: 1.2,
         strokeWeight: 0
       },
       labelClass: 'spaces',
-      labelAnchor: new google.maps.Point(15, 37),
-      labelContent: '<div class="count spaces-available hidden">' + stationObject.spacesAvailable + '</div>'
-    })
-
-    new MarkerWithLabel({
-      position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
-      map: map,
-      icon: {
-        path: 'M10,0 C4.47743652,0 -5.68434189e-14,4.47712722 -5.68434189e-14,10 C-5.68434189e-14,19.2282948 10,28.809811 10,28.809811 C10,28.809811 20,18.2592558 20,9.9996907 C20,4.47712722 15.5225635,0 10,0',
-        fillColor: getFillColor(bikesAvailable),
-        anchor: new google.maps.Point(10, 28),
-        fillOpacity: 1,
-        scale: 1.2,
-        strokeWeight: 0
-      },
-      labelClass: 'bikes',
-      labelAnchor: new google.maps.Point(15, 37),
-      labelContent: '<div class="count bikes-available">' + stationObject.bikesAvailable + '</div>'
+      labelAnchor: new google.maps.Point(15, 30),
+      labelContent: labelContent
     })
   }
 
-  drawStation()
+  var spacesAvailable = parseInt(stationObject.spacesAvailable)
+  var bikesAvailable = parseInt(stationObject.bikesAvailable)
+
+  createStationMarker('#FCBC19', '<div class="count bikes-available">' + bikesAvailable + '</div>')
+  createStationMarker('#FCBC19', '<div class="count spaces-available hidden">' + spacesAvailable + '</div>')
 }
 
 function getJSON(url, callback) {
@@ -199,8 +164,8 @@ function addButtonListeners() {
 function initializeApp() {
   initializeGoogleMaps()
   getJSON('/api/stations', function(data) {
-// handle no data from server
-// joku intervalli toho datan refreshii
+    // handle no data from server
+    // joku intervalli toho datan refreshii 60s hyvä
     _.map(data.bikeRentalStations, createStation)
   })
   addButtonListeners()
