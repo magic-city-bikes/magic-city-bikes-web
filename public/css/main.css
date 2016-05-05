@@ -39,9 +39,8 @@ a {
   width: 50%;
   height: 4em;
   display: inline-block;
-  border-top: 0.5em solid lightgreen;
+  padding-top: 0.5em;
   text-align: center;
-  line-height: 3em;
   float: left;
   cursor: pointer;
   color: white;
@@ -50,8 +49,8 @@ a {
   background: lightgreen;
   border-color: darkgreen;
 }
-#rent-button {
-  border-right: 0.1em solid lightgreen;
+small {
+  display: inline-block;
 }
 
 .hidden {

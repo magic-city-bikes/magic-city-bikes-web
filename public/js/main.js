@@ -121,7 +121,7 @@ function getUserGPSLocation() {
     timeout: 60 * 1000,
     maximumAge: 30
   }
-  console.log('asd')
+
   navigator.geolocation.getCurrentPosition(geolocationSuccess, function(){}, geolocationOptions)
 }
 
