@@ -68,3 +68,32 @@ small {
   text-align: center;
   display: inline-block;
 }
+
+.sidebar {
+  z-index: 4000;
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  min-width: 220px;
+  max-width: 400px;
+  background: #4A4A4A;
+  color: white;
+  padding: 2em 2em 1em 1.5em;
+  display: none;
+}
+
+@media screen and (min-width: 1200px) {
+  .sidebar {
+    display: block;
+  }
+  #rent-button, #return-button {
+    position: fixed;
+    left: 1em;
+    width: 15em;
+    top: 1em;
+  }
+  #return-button {
+    top: 6em;
+  }
+}
