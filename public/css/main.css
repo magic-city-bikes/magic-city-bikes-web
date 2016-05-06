@@ -26,40 +26,6 @@ a {
   height: inherit;
 }
 
-#mode-buttons {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-}
-
-#rent-button, #return-button {
-  background: #4A4A4A;
-  color: #9B9B9B;
-  width: 50%;
-  height: 4em;
-  display: inline-block;
-  padding-top: 0.5em;
-  text-align: center;
-  float: left;
-  cursor: pointer;
-  border-bottom: 0.3em solid #4A4A4A;
-  transition: all 0.2s ease-in-out;
-}
-#rent-button.button-active, #return-button.button-active {
-  color: #FCBC19;
-  background: #fff;
-  border-color: #FCBC19;
-}
-small {
-  display: inline-block;
-}
-
-.hidden {
-  display: none !important;
-}
-
 .count {
   color: #4A4A4A;
   font-weight: bold;
@@ -72,13 +38,13 @@ small {
 .sidebar {
   z-index: 4000;
   position: fixed;
-  right: 0;
   top: 0;
-  bottom: 0;
-  width: 320px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 3em;
   background: #4A4A4A;
   color: white;
-  display: none;
   opacity: 0.95;
 }
 
@@ -91,14 +57,11 @@ small {
 @media screen and (min-width: 1200px) {
   .sidebar {
     display: block;
-  }
-  #rent-button, #return-button {
-    position: fixed;
-    left: 1em;
-    width: 15em;
-    top: 1em;
-  }
-  #return-button {
-    top: 6em;
+    left: auto;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px;
+    height: 100%;
   }
 }
