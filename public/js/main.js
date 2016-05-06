@@ -30,24 +30,22 @@ function createStation(stationObject) {
       position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
       map: map,
       icon: {
-        path: 'M10,0 C4.47743652,0 -5.68434189e-14,4.47712722 -5.68434189e-14,10 C-5.68434189e-14,19.2282948 10,28.809811 10,28.809811 C10,28.809811 20,18.2592558 20,9.9996907 C20,4.47712722 15.5225635,0 10,0',
+        path: 'M-25,-35.25 L25,-35.25 L25,-9.48728814 L-25,-9.48728814 L-25,-35.25 Z M0.338983051,0.00423728814 L-5.08474576,-9.48728814 L5.76271186,-9.48728814 L0.338983051,0.00423728814 Z',
         fillColor: color,
-        anchor: new google.maps.Point(10, 28),
         fillOpacity: 1,
-        scale: 1.2,
+        scale: 1.1,
         strokeWeight: 0
       },
       labelClass: 'spaces',
-      labelAnchor: new google.maps.Point(15, 30),
+      labelAnchor: new google.maps.Point(25, 34),
       labelContent: labelContent
     })
   }
 
   var spacesAvailable = parseInt(stationObject.spacesAvailable)
   var bikesAvailable = parseInt(stationObject.bikesAvailable)
-
-  createStationMarker('#FCBC19', '<div class="count bikes-available">' + bikesAvailable + '</div>')
-  createStationMarker('#FCBC19', '<div class="count spaces-available hidden">' + spacesAvailable + '</div>')
+  var totalSpaces = spacesAvailable + bikesAvailable
+  createStationMarker('#FCBC19', '<div class="count spaces-available">' + bikesAvailable + ' / ' + totalSpaces + '</div>')
 }
 
 function getJSON(url, callback) {
@@ -118,48 +116,48 @@ function getUserGPSLocation() {
   navigator.geolocation.getCurrentPosition(geolocationSuccess, function(){}, geolocationOptions)
 }
 
-function toggleMapMode(mode) {
-  var modeIsRent = mode === 'rent-button'
-  var toBeHidden = modeIsRent ? '.spaces-available' : '.bikes-available'
-  var toBeShown = modeIsRent ? '.bikes-available' : '.spaces-available'
+// function toggleMapMode(mode) {
+//   var modeIsRent = mode === 'rent-button'
+//   var toBeHidden = modeIsRent ? '.spaces-available' : '.bikes-available'
+//   var toBeShown = modeIsRent ? '.bikes-available' : '.spaces-available'
 
-  var toBeHiddenElements = document.querySelectorAll(toBeHidden)
-  var toBeShownElements = document.querySelectorAll(toBeShown)
+//   var toBeHiddenElements = document.querySelectorAll(toBeHidden)
+//   var toBeShownElements = document.querySelectorAll(toBeShown)
 
-  for(var i = 0; i < toBeHiddenElements.length; i++){
-    toBeHiddenElements[i].classList.add('hidden')
-  }
-  for(var i = 0; i < toBeShownElements.length; i++){
-    toBeShownElements[i].classList.remove('hidden')
-  }
-}
+//   for(var i = 0; i < toBeHiddenElements.length; i++){
+//     toBeHiddenElements[i].classList.add('hidden')
+//   }
+//   for(var i = 0; i < toBeShownElements.length; i++){
+//     toBeShownElements[i].classList.remove('hidden')
+//   }
+// }
 
-function toggleMode() {
-  function toggleButtonStates(element) {
-    var buttons = document.querySelectorAll('.mode-button')
+// function toggleMode() {
+//   function toggleButtonStates(element) {
+//     var buttons = document.querySelectorAll('.mode-button')
 
-    for(var i = 0; i < buttons.length; i++){
-      buttons[i].classList.remove('button-active')
-    }
+//     for(var i = 0; i < buttons.length; i++){
+//       buttons[i].classList.remove('button-active')
+//     }
 
-    element.classList.add('button-active')
-  }
+//     element.classList.add('button-active')
+//   }
 
 
-  var isActiveMode = this.classList.contains('button-active')
-  if (!isActiveMode) {
-    var mode = this.getAttribute('id')
-    toggleButtonStates(this) // cleanup this
-    toggleMapMode(mode)
-  }
-}
+//   var isActiveMode = this.classList.contains('button-active')
+//   if (!isActiveMode) {
+//     var mode = this.getAttribute('id')
+//     toggleButtonStates(this) // cleanup this
+//     toggleMapMode(mode)
+//   }
+// }
 
-function addButtonListeners() {
-  var rentButton = document.getElementById("rent-button")
-  var returnButton = document.getElementById("return-button")
-  rentButton.addEventListener("click", toggleMode, false)
-  returnButton.addEventListener("click", toggleMode, false)
-}
+// function addButtonListeners() {
+//   var rentButton = document.getElementById("rent-button")
+//   var returnButton = document.getElementById("return-button")
+//   rentButton.addEventListener("click", toggleMode, false)
+//   returnButton.addEventListener("click", toggleMode, false)
+// }
 
 function initializeApp() {
   initializeGoogleMaps()
@@ -168,7 +166,7 @@ function initializeApp() {
     // joku intervalli toho datan refreshii 60s hyvä
     _.map(data.bikeRentalStations, createStation)
   })
-  addButtonListeners()
+  // addButtonListeners()
 }
 
 function ready(fn) {
