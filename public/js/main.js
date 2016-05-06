@@ -120,7 +120,7 @@ function initializeApp() {
   getJSON('/api/stations', function(data) {
     // handle no data from server
     // joku intervalli toho datan refreshii 60s hyvä
-    _.map(data.bikeRentalStations, createStation)
+    data.bikeRentalStations.map(createStation)
   })
 }
 
