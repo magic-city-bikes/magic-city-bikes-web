@@ -85,6 +85,14 @@ function outsideOperationTheatre(position) {
   return !latInside && !lngInside
 }
 
+function getCompassHeading() {
+  if (event.webkitCompassHeading) {
+    return event.webkitCompassHeading
+  } else {
+    return event.alpha
+  }
+}
+
 function geolocationSuccess(position) {
   var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
 
@@ -93,12 +101,38 @@ function geolocationSuccess(position) {
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 10,
-      fillOpacity: 0.9,
+      fillOpacity: 1,
       fillColor: '#40b3ff',
       strokeOpacity: 0
     },
     map: map
   })
+
+  if (window.DeviceOrientationEvent) {
+    function rotateHeadingIcon(eventData) {
+      var iconOptions = iconBaseOptions
+      iconOptions.rotation = getCompassHeading()
+      headingMarker.setIcon(iconOptions)
+    }
+
+    var iconBaseOptions = {
+      path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
+      scale: 4,
+      fillOpacity: 1,
+      fillColor: '#40b3ff',
+      anchor: new google.maps.Point(0, 4),
+      strokeOpacity: 0
+    }
+
+    var headingMarker = new google.maps.Marker({
+      position: userLatLng,
+      icon: iconBaseOptions,
+      map: map
+    })
+
+    window.addEventListener('deviceorientation', rotateHeadingIcon)
+  }
+
 
   if (!outsideOperationTheatre(position)) {
     map.panTo(userLatLng)
