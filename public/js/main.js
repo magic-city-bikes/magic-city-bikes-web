@@ -30,7 +30,9 @@ var defaultMapSettings = {
 }
 
 function initializeGoogleMaps() {
-  var styles = [{"featureType":"landscape","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","stylers":[{"saturation":-100},{"lightness":51},{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"saturation":-100},{"lightness":30},{"visibility":"on"}]},{"featureType":"road.local","stylers":[{"saturation":-100},{"lightness":40},{"visibility":"on"}]},{"featureType":"transit","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"administrative.province","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":-25},{"saturation":-100}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]}]
+
+  var styles = [
+    {"featureType":"landscape","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","stylers":[{"saturation":-100},{"lightness":51},{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"saturation":-100},{"lightness":30},{"visibility":"on"}]},{"featureType":"road.local","stylers":[{"saturation":-100},{"lightness":40},{"visibility":"on"}]},{"featureType":"transit","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"administrative.province","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":-25},{"saturation":-100}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]}]
 
   var mapOptions = {
     center: new google.maps.LatLng(defaultMapSettings.lat, defaultMapSettings.lng),
@@ -40,8 +42,24 @@ function initializeGoogleMaps() {
     styles: styles
   }
 
+
+  // https://developers.google.com/maps/documentation/javascript/examples/maptype-overlay
+  function CoordMapType(tileSize) {
+    this.tileSize = tileSize
+  }
+
+  CoordMapType.prototype.getTile = function(coord, zoom, ownerDocument) {
+    var div = ownerDocument.createElement('div')
+    div.style.width = this.tileSize.width + 'px'
+    div.style.height = this.tileSize.height + 'px'
+    div.style.backgroundColor = '#FCBC19'
+    div.style.opacity = 0.7
+    return div
+  }
+
   var mapElement = document.getElementById('map-canvas')
   map = new google.maps.Map(mapElement, mapOptions)
+  map.overlayMapTypes.insertAt(0, new CoordMapType(new google.maps.Size(256, 256)))
 
   getUserGPSLocation()
 }
