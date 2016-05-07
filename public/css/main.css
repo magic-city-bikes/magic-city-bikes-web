@@ -53,9 +53,7 @@ p {
 }
 
 .logo-container img {
-  width: 50%;
-  display: block;
-  margin: 5em auto;
+  width: 3em;
 }
 
 .description-container {
@@ -72,7 +70,7 @@ p {
   text-transform: uppercase;
 }
 
-@media screen and (min-width: 200px) {
+@media screen and (min-width: 900px) {
   .sidebar {
     display: block;
     left: auto;
@@ -82,7 +80,14 @@ p {
     width: 320px;
     height: 100%;
   }
+
   .description-container {
     display: block;
+  }
+
+  .logo-container img {
+    width: 50%;
+    display: block;
+    margin: 5em auto;
   }
 }
