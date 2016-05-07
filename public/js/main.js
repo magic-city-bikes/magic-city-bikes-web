@@ -97,12 +97,16 @@ function getCompassHeading() {
   }
 }
 
-function setupHeadingDisplay(userLatLng) {
+function setupHeadingMarker(userLatLng) {
   function rotateHeadingIcon(eventData) {
     if (headingMarker) {
       var iconOptions = headingIconBaseOptions
       iconOptions.rotation = getCompassHeading()
-      headingMarker.setIcon(iconOptions)
+
+      headingMarker.setOptions({
+        position: userLatLng,
+        icon: iconOptions
+      })
     } else if (event.webkitCompassHeading || event.alpha) {
       headingMarker = new google.maps.Marker({
         position: userLatLng,
@@ -112,12 +116,12 @@ function setupHeadingDisplay(userLatLng) {
     }
   }
 
-  window.addEventListener('deviceorientation', rotateHeadingIcon)
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', rotateHeadingIcon)
+  }
 }
 
-function geolocationSuccess(position) {
-  var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-
+function createOrUpdateLocationMarker(userLatLng) {
   if (locationMarker) {
     locationMarker.setOptions({
       position: userLatLng,
@@ -130,10 +134,13 @@ function geolocationSuccess(position) {
       map: map
     })
   }
+}
 
-  if (window.DeviceOrientationEvent) {
-    setupHeadingDisplay(userLatLng)
-  }
+function geolocationSuccess(position) {
+  var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+
+  createOrUpdateLocationMarker(userLatLng)
+  setupHeadingMarker(userLatLng)
 
   if (!outsideOperationTheatre(position)) {
     map.panTo(userLatLng)
@@ -143,7 +150,7 @@ function geolocationSuccess(position) {
 function getUserGPSLocation() {
   var geolocationOptions = {
     enableHighAccuracy: true,
-    timeout: 60 * 1000,
+    timeout: 30 * 1000,
     maximumAge: 45,
     frequency: 1000
   }
