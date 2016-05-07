@@ -110,9 +110,17 @@ function geolocationSuccess(position) {
 
   if (window.DeviceOrientationEvent) {
     function rotateHeadingIcon(eventData) {
-      var iconOptions = iconBaseOptions
-      iconOptions.rotation = getCompassHeading()
-      headingMarker.setIcon(iconOptions)
+      if (headingMarker) {
+        var iconOptions = iconBaseOptions
+        iconOptions.rotation = getCompassHeading()
+        headingMarker.setIcon(iconOptions)
+      } else if (event.webkitCompassHeading || event.alpha) {
+        headingMarker = new google.maps.Marker({
+          position: userLatLng,
+          icon: iconBaseOptions,
+          map: map
+        })
+      }
     }
 
     var iconBaseOptions = {
@@ -124,12 +132,7 @@ function geolocationSuccess(position) {
       strokeOpacity: 0
     }
 
-    var headingMarker = new google.maps.Marker({
-      position: userLatLng,
-      icon: iconBaseOptions,
-      map: map
-    })
-
+    var headingMarker = undefined
     window.addEventListener('deviceorientation', rotateHeadingIcon)
   }
 
