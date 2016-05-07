@@ -42,28 +42,27 @@ function initializeGoogleMaps() {
   getUserGPSLocation()
 }
 
-
 function createStation(stationObject) {
-  function createStationMarker(color, labelContent) {
+  function createStationMarker(bikesAvailable, totalSpaces) {
     new MarkerWithLabel({
       position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
       map: map,
       icon: {
-        path: 'M-25,-35.25 L25,-35.25 L25,-9.48728814 L-25,-9.48728814 L-25,-35.25 Z M0.338983051,0.00423728814 L-5.08474576,-9.48728814 L5.76271186,-9.48728814 L0.338983051,0.00423728814 Z',
-        fillColor: color,
+        path: 'M1.0658141e-14,-26.5 C-11.0283582,-26.5 -20,-17.1983066 -20,-5.7650073 C-20,7.61420438 -1.49104478,25.2218102 -0.703731343,25.8988175 L-0.00447761194,26.5 L0.697761194,25.9026861 C1.48656716,25.2334161 20,7.80686131 20,-5.7650073 C20,-17.1983066 11.0276119,-26.5 1.0658141e-14,-26.5 L1.0658141e-14,-26.5 Z',
+        fillColor: '#FFFFFF',
         fillOpacity: 1,
         scale: 1.1,
         strokeWeight: 0
       },
-      labelAnchor: new google.maps.Point(25, 34),
-      labelContent: labelContent
+      labelAnchor: new google.maps.Point(20, 15),
+      labelContent: '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>'
     })
   }
 
   var spacesAvailable = parseInt(stationObject.spacesAvailable)
   var bikesAvailable = parseInt(stationObject.bikesAvailable)
   var totalSpaces = spacesAvailable + bikesAvailable
-  createStationMarker('#FCBC19', '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>')
+  createStationMarker(bikesAvailable, totalSpaces)
 }
 
 
