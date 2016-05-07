@@ -15,9 +15,10 @@ const client = new Lokka({
 
 app.disable('x-powered-by')
 app.use(compress())
-app.use(express.static('./public', {maxAge: 12 * 60 * 60 * 1000}))
+app.use(express.static('./public', {maxAge: 30 * 60 * 1000}))
 
 app.get('/api/stations', (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=10')
   res.send(stationCache)
 })
 
