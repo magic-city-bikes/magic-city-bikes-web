@@ -1,6 +1,7 @@
 var map = null
 var locationMarker = null
 var headingMarker = null
+var notPannedThisSession = true
 
 var locationBaseColor = '#333333'
 
@@ -163,8 +164,9 @@ function geolocationSuccess(position) {
   createOrUpdateLocationMarker(userLatLng)
   setupHeadingMarker(userLatLng)
 
-  if (!outsideOperationTheatre(position)) {
+  if (!outsideOperationTheatre(position) && notPannedThisSession) {
     map.panTo(userLatLng)
+    notPannedThisSession = false
   }
 }
 
