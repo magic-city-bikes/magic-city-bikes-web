@@ -33,7 +33,148 @@ var defaultMapSettings = {
 function initializeGoogleMaps() {
 
   var styles = [
-    {"featureType":"landscape","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","stylers":[{"saturation":-100},{"lightness":51},{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"saturation":-100},{"lightness":30},{"visibility":"on"}]},{"featureType":"road.local","stylers":[{"saturation":-100},{"lightness":40},{"visibility":"on"}]},{"featureType":"transit","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"administrative.province","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":-25},{"saturation":-100}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]}]
+    {
+        "featureType": "administrative",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#d16b08"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#ffbf09"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#f2f2f2"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#feb909"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#d16b08"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#ffbf09"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "all",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 45
+            },
+            {
+                "color": "#ffbf09"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#d16a00"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#d16a00"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#d16a00"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#ffb100"
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    }
+]
 
   var mapOptions = {
     center: new google.maps.LatLng(defaultMapSettings.lat, defaultMapSettings.lng),
@@ -44,41 +185,27 @@ function initializeGoogleMaps() {
   }
 
 
-  // https://developers.google.com/maps/documentation/javascript/examples/maptype-overlay
-  function CoordMapType(tileSize) {
-    this.tileSize = tileSize
-  }
-
-  CoordMapType.prototype.getTile = function(coord, zoom, ownerDocument) {
-    var div = ownerDocument.createElement('div')
-    div.style.width = this.tileSize.width + 'px'
-    div.style.height = this.tileSize.height + 'px'
-    div.style.backgroundColor = '#FCBC19'
-    div.style.opacity = 0.7
-    return div
-  }
-
   var mapElement = document.getElementById('map-canvas')
   map = new google.maps.Map(mapElement, mapOptions)
-  map.overlayMapTypes.insertAt(0, new CoordMapType(new google.maps.Size(256, 256)))
 
   getUserGPSLocation()
 }
 
 function createStation(stationObject) {
   function createStationMarker(bikesAvailable, totalSpaces) {
+    var labelContent = '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>'
     new MarkerWithLabel({
       position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
       map: map,
       icon: {
-        path: 'M1.0658141e-14,-26.5 C-11.0283582,-26.5 -20,-17.1983066 -20,-5.7650073 C-20,7.61420438 -1.49104478,25.2218102 -0.703731343,25.8988175 L-0.00447761194,26.5 L0.697761194,25.9026861 C1.48656716,25.2334161 20,7.80686131 20,-5.7650073 C20,-17.1983066 11.0276119,-26.5 1.0658141e-14,-26.5 L1.0658141e-14,-26.5 Z',
+        path: 'M1.0658141e-14,-54 C-11.0283582,-54 -20,-44.5228029 -20,-32.873781 C-20,-19.2421314 -1.49104478,-1.30230657 -0.703731343,-0.612525547 L-0.00447761194,-7.10542736e-15 L0.697761194,-0.608583942 C1.48656716,-1.29048175 20,-19.0458394 20,-32.873781 C20,-44.5228029 11.0276119,-54 1.0658141e-14,-54 L1.0658141e-14,-54 Z',
         fillColor: '#FFFFFF',
         fillOpacity: 1,
         scale: 1.1,
         strokeWeight: 0
       },
-      labelAnchor: new google.maps.Point(20, 15),
-      labelContent: '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>'
+      labelAnchor: new google.maps.Point(20, 43),
+      labelContent: labelContent
     })
   }
 

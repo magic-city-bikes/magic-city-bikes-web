@@ -48,12 +48,14 @@ p {
   width: 100%;
   height: 3em;
   background: #333333;
-  color: white;
+  color: #fff;
+  opacity: 0.97;
 }
 
-.sidebar img {
-  height: 3em;
-  float: left;
+.logo-container img {
+  width: 50%;
+  display: block;
+  margin: 5em auto;
 }
 
 .description-container {
@@ -70,7 +72,7 @@ p {
   text-transform: uppercase;
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 200px) {
   .sidebar {
     display: block;
     left: auto;
