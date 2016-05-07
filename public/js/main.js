@@ -1,17 +1,36 @@
 var map = null
+var locationMarker = null
+var headingMarker = null
+
+var headingIconBaseOptions = {
+  path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
+  scale: 4,
+  fillOpacity: 1,
+  fillColor: '#40b3ff',
+  anchor: new google.maps.Point(0, 4),
+  strokeOpacity: 0
+}
+
+var locationIconBaseOptions = {
+  path: google.maps.SymbolPath.CIRCLE,
+  scale: 10,
+  fillOpacity: 1,
+  fillColor: '#40b3ff',
+  strokeOpacity: 0
+}
+
+var defaultMapSettings = {
+  lat: 60.1729721445,
+  lng: 24.9399946767,
+  zoom: 15
+}
 
 function initializeGoogleMaps() {
   var styles = [{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#d3d3d3"}]},{"featureType":"transit","stylers":[{"color":"#808080"},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#b3b3b3"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"weight":1.8}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"color":"#d7d7d7"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ebebeb"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"color":"#a7a7a7"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"landscape","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#efefef"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#696969"}]},{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"visibility":"on"},{"color":"#737373"}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"geometry.stroke","stylers":[{"color":"#d6d6d6"}]},{"featureType":"road","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"color":"#dadada"}]}]
 
-  var defaultUserSettings = {
-    lat: 60.1729721445,
-    lng: 24.9399946767,
-    zoom: 15
-  }
-
   var mapOptions = {
-    center: new google.maps.LatLng(defaultUserSettings.lat, defaultUserSettings.lng),
-    zoom: defaultUserSettings.zoom,
+    center: new google.maps.LatLng(defaultMapSettings.lat, defaultMapSettings.lng),
+    zoom: defaultMapSettings.zoom,
     disableDefaultUI: true,
     zoomControl: false,
     styles: styles
@@ -47,22 +66,7 @@ function createStation(stationObject) {
   createStationMarker('#FCBC19', '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>')
 }
 
-function getJSON(url, callback) {
-  var request = new XMLHttpRequest()
-  request.open('GET', url, true)
 
-  request.onreadystatechange = function() {
-    if (this.readyState === 4) {
-      if (this.status >= 200 && this.status < 400) {
-        var data = JSON.parse(this.responseText)
-        callback(data)
-      }
-    }
-  }
-
-  request.send()
-  request = null
-}
 
 function outsideOperationTheatre(position) {
   var theatreWestSouthPoint = {
@@ -93,49 +97,43 @@ function getCompassHeading() {
   }
 }
 
+function setupHeadingDisplay(userLatLng) {
+  function rotateHeadingIcon(eventData) {
+    if (headingMarker) {
+      var iconOptions = headingIconBaseOptions
+      iconOptions.rotation = getCompassHeading()
+      headingMarker.setIcon(iconOptions)
+    } else if (event.webkitCompassHeading || event.alpha) {
+      headingMarker = new google.maps.Marker({
+        position: userLatLng,
+        icon: headingIconBaseOptions,
+        map: map
+      })
+    }
+  }
+
+  window.addEventListener('deviceorientation', rotateHeadingIcon)
+}
+
 function geolocationSuccess(position) {
   var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
 
-  new google.maps.Marker({
-    position: userLatLng,
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 10,
-      fillOpacity: 1,
-      fillColor: '#40b3ff',
-      strokeOpacity: 0
-    },
-    map: map
-  })
-
-  if (window.DeviceOrientationEvent) {
-    function rotateHeadingIcon(eventData) {
-      if (headingMarker) {
-        var iconOptions = iconBaseOptions
-        iconOptions.rotation = getCompassHeading()
-        headingMarker.setIcon(iconOptions)
-      } else if (event.webkitCompassHeading || event.alpha) {
-        headingMarker = new google.maps.Marker({
-          position: userLatLng,
-          icon: iconBaseOptions,
-          map: map
-        })
-      }
-    }
-
-    var iconBaseOptions = {
-      path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
-      scale: 4,
-      fillOpacity: 1,
-      fillColor: '#40b3ff',
-      anchor: new google.maps.Point(0, 4),
-      strokeOpacity: 0
-    }
-
-    var headingMarker = undefined
-    window.addEventListener('deviceorientation', rotateHeadingIcon)
+  if (locationMarker) {
+    locationMarker.setOptions({
+      position: userLatLng,
+      icon: locationIconBaseOptions
+    })
+  } else {
+    locationMarker = new google.maps.Marker({
+      position: userLatLng,
+      icon: locationIconBaseOptions,
+      map: map
+    })
   }
 
+  if (window.DeviceOrientationEvent) {
+    setupHeadingDisplay(userLatLng)
+  }
 
   if (!outsideOperationTheatre(position)) {
     map.panTo(userLatLng)
@@ -146,10 +144,28 @@ function getUserGPSLocation() {
   var geolocationOptions = {
     enableHighAccuracy: true,
     timeout: 60 * 1000,
-    maximumAge: 30
+    maximumAge: 45,
+    frequency: 1000
   }
 
-  navigator.geolocation.getCurrentPosition(geolocationSuccess, function(){}, geolocationOptions)
+  navigator.geolocation.watchPosition(geolocationSuccess, function(){}, geolocationOptions)
+}
+
+function getJSON(url, callback) {
+  var request = new XMLHttpRequest()
+  request.open('GET', url, true)
+
+  request.onreadystatechange = function() {
+    if (this.readyState === 4) {
+      if (this.status >= 200 && this.status < 400) {
+        var data = JSON.parse(this.responseText)
+        callback(data)
+      }
+    }
+  }
+
+  request.send()
+  request = null
 }
 
 function initializeApp() {
