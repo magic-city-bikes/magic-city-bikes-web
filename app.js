@@ -43,7 +43,9 @@ function refreshStationCache() {
 
 function saveStations() {
   if (stationCache) {
-    db.collection('stations').insertOne(stationCache.bikeRentalStations, (err, result) => {})
+    console.log(db)
+    const stations = stationCache.bikeRentalStations
+    db.collection('stations').insertOne(stations, (err, result) => {})
   }
 }
 
@@ -52,7 +54,7 @@ function startStationSaving() {
     MongoClient.connect(process.env.MONGODB_URI, (err, db) => {
       if (!err) {
         db = db
-        console.log("Connected to MongoDB");
+        console.log("Connected to MongoDB", db)
         setInterval(saveStations, 60 * 1000)
       } else {
         console.error(err)
