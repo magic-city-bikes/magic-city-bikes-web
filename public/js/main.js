@@ -1,7 +1,8 @@
 var map = null
+var markers = []
 var locationMarker = null
 var headingMarker = null
-var notPannedThisSession = true
+var pannedThisSession = false
 
 var locationBaseColor = '#40b3ff'
 
@@ -29,186 +30,7 @@ var defaultMapSettings = {
 }
 
 function initializeGoogleMaps() {
-
-  var styles = [
-    {
-        "featureType": "all",
-        "elementType": "labels.text.fill",
-        "stylers": [
-            {
-                "saturation": 36
-            },
-            {
-                "color": "#333333"
-            },
-            {
-                "lightness": 40
-            }
-        ]
-    },
-    {
-        "featureType": "all",
-        "elementType": "labels.text.stroke",
-        "stylers": [
-            {
-                "visibility": "on"
-            },
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 16
-            }
-        ]
-    },
-    {
-        "featureType": "all",
-        "elementType": "labels.icon",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "administrative",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "color": "#fefefe"
-            },
-            {
-                "lightness": 20
-            }
-        ]
-    },
-    {
-        "featureType": "administrative",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            {
-                "color": "#fefefe"
-            },
-            {
-                "lightness": 17
-            },
-            {
-                "weight": 1.2
-            }
-        ]
-    },
-    {
-        "featureType": "landscape",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#f5f5f5"
-            },
-            {
-                "lightness": 20
-            }
-        ]
-    },
-    {
-        "featureType": "poi",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#f5f5f5"
-            },
-            {
-                "lightness": 21
-            }
-        ]
-    },
-    {
-        "featureType": "poi.park",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#ccedc8"
-            },
-            {
-                "lightness": 21
-            }
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 17
-            }
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 29
-            },
-            {
-                "weight": 0.2
-            }
-        ]
-    },
-    {
-        "featureType": "road.arterial",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 18
-            }
-        ]
-    },
-    {
-        "featureType": "road.local",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 16
-            }
-        ]
-    },
-    {
-        "featureType": "transit",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#f2f2f2"
-            },
-            {
-                "lightness": 19
-            }
-        ]
-    },
-    {
-        "featureType": "water",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#e0eff8"
-            },
-            {
-                "lightness": 17
-            }
-        ]
-    }
-]
+  var styles = [{"featureType": "all", "elementType": "labels.text.fill", "stylers": [{"saturation": 36 }, {"color": "#333333"}, {"lightness": 40 } ] }, {"featureType": "all", "elementType": "labels.text.stroke", "stylers": [{"visibility": "on"}, {"color": "#ffffff"}, {"lightness": 16 } ] }, {"featureType": "all", "elementType": "labels.icon", "stylers": [{"visibility": "off"} ] }, {"featureType": "administrative", "elementType": "geometry.fill", "stylers": [{"color": "#fefefe"}, {"lightness": 20 } ] }, {"featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{"color": "#fefefe"}, {"lightness": 17 }, {"weight": 1.2 } ] }, {"featureType": "landscape", "elementType": "geometry", "stylers": [{"color": "#f5f5f5"}, {"lightness": 20 } ] }, {"featureType": "poi", "elementType": "geometry", "stylers": [{"color": "#f5f5f5"}, {"lightness": 21 } ] }, {"featureType": "poi.park", "elementType": "geometry", "stylers": [{"color": "#ccedc8"}, {"lightness": 21 } ] }, {"featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{"color": "#ffffff"}, {"lightness": 17 } ] }, {"featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{"color": "#ffffff"}, {"lightness": 29 }, {"weight": 0.2 } ] }, {"featureType": "road.arterial", "elementType": "geometry", "stylers": [{"color": "#ffffff"}, {"lightness": 18 } ] }, {"featureType": "road.local", "elementType": "geometry", "stylers": [{"color": "#ffffff"}, {"lightness": 16 } ] }, {"featureType": "transit", "elementType": "geometry", "stylers": [{"color": "#f2f2f2"}, {"lightness": 19 } ] }, {"featureType": "water", "elementType": "geometry", "stylers": [{"color": "#e0eff8"}, {"lightness": 17 } ] } ]
 
   var mapOptions = {
     center: new google.maps.LatLng(defaultMapSettings.lat, defaultMapSettings.lng),
@@ -218,9 +40,12 @@ function initializeGoogleMaps() {
     styles: styles
   }
 
-
   var mapElement = document.getElementById('map-canvas')
   map = new google.maps.Map(mapElement, mapOptions)
+
+  // google.maps.event.addListener(map, 'zoom_changed', function() {
+  //   console.log(map.getZoom())
+  // })
 
   getUserGPSLocation()
 }
@@ -228,7 +53,7 @@ function initializeGoogleMaps() {
 function createStation(stationObject) {
   function createStationMarker(bikesAvailable, totalSpaces) {
     var labelContent = '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>'
-    new MarkerWithLabel({
+    var stationMarker = new MarkerWithLabel({
       position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
       map: map,
       icon: {
@@ -241,6 +66,8 @@ function createStation(stationObject) {
       labelAnchor: new google.maps.Point(20, 43),
       labelContent: labelContent
     })
+
+    markers.push(stationMarker)
   }
 
   var spacesAvailable = parseInt(stationObject.spacesAvailable)
@@ -248,8 +75,6 @@ function createStation(stationObject) {
   var totalSpaces = spacesAvailable + bikesAvailable
   createStationMarker(bikesAvailable, totalSpaces)
 }
-
-
 
 function outsideOperationTheatre(position) {
   var theatreWestSouthPoint = {
@@ -281,21 +106,27 @@ function getCompassHeading() {
 }
 
 function setupHeadingMarker(userLatLng) {
+  function updateHeadingMarker() {
+    var iconOptions = headingIconBaseOptions
+    iconOptions.rotation = getCompassHeading()
+
+    headingMarker.setOptions({
+      position: userLatLng,
+      icon: iconOptions
+    })
+  }
+  function drawHeadingMarker() {
+    headingMarker = new google.maps.Marker({
+      position: userLatLng,
+      icon: headingIconBaseOptions,
+      map: map
+    })
+  }
   function rotateHeadingIcon(eventData) {
     if (headingMarker) {
-      var iconOptions = headingIconBaseOptions
-      iconOptions.rotation = getCompassHeading()
-
-      headingMarker.setOptions({
-        position: userLatLng,
-        icon: iconOptions
-      })
+      updateHeadingMarker()
     } else if (event.webkitCompassHeading || event.alpha) {
-      headingMarker = new google.maps.Marker({
-        position: userLatLng,
-        icon: headingIconBaseOptions,
-        map: map
-      })
+      drawHeadingMarker()
     }
   }
 
@@ -325,9 +156,9 @@ function geolocationSuccess(position) {
   createOrUpdateLocationMarker(userLatLng)
   setupHeadingMarker(userLatLng)
 
-  if (!outsideOperationTheatre(position) && notPannedThisSession) {
+  if (!outsideOperationTheatre(position) && !pannedThisSession) {
     map.panTo(userLatLng)
-    notPannedThisSession = false
+    pannedThisSession = true
   }
 }
 
@@ -335,7 +166,7 @@ function getUserGPSLocation() {
   var geolocationOptions = {
     enableHighAccuracy: true,
     timeout: 30 * 1000,
-    maximumAge: 45,
+    maximumAge: 60,
     frequency: 1000
   }
 
