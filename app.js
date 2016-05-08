@@ -43,7 +43,13 @@ function refreshStationCache() {
 
 function saveStations() {
   if (stationCache) {
-    database.collection('stations').insertOne(stationCache, (err, result) => {})
+    const stationsWithTimestamp = _.extend({},
+      stationCache,
+      {
+        timestamp: new Date().getTime()
+      }
+    )
+    database.collection('stations').insertOne(stationsWithTimestamp, (err, result) => {})
   }
 }
 
