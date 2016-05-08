@@ -3,7 +3,7 @@ var locationMarker = null
 var headingMarker = null
 var notPannedThisSession = true
 
-var locationBaseColor = '#333333'
+var locationBaseColor = '#40b3ff'
 
 var headingIconBaseOptions = {
   path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
@@ -19,9 +19,7 @@ var locationIconBaseOptions = {
   scale: 10,
   fillOpacity: 1,
   fillColor: locationBaseColor,
-  strokeOpacity: 1,
-  strokeWeight: 2,
-  strokeColor: "#ffffff"
+  strokeOpacity: 0
 }
 
 var defaultMapSettings = {
