@@ -34,109 +34,37 @@ function initializeGoogleMaps() {
 
   var styles = [
     {
-        "featureType": "administrative",
+        "featureType": "all",
         "elementType": "labels.text.fill",
         "stylers": [
             {
-                "color": "#d16b08"
-            }
-        ]
-    },
-    {
-        "featureType": "administrative",
-        "elementType": "labels.text.stroke",
-        "stylers": [
-            {
-                "color": "#ffbf09"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape",
-        "elementType": "all",
-        "stylers": [
-            {
-                "color": "#f2f2f2"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "color": "#feb909"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape",
-        "elementType": "labels.text.fill",
-        "stylers": [
-            {
-                "color": "#d16b08"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape",
-        "elementType": "labels.text.stroke",
-        "stylers": [
-            {
-                "color": "#ffbf09"
-            }
-        ]
-    },
-    {
-        "featureType": "poi",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "road",
-        "elementType": "all",
-        "stylers": [
-            {
-                "saturation": -100
+                "saturation": 36
             },
             {
-                "lightness": 45
+                "color": "#333333"
             },
             {
-                "color": "#ffbf09"
+                "lightness": 40
             }
         ]
     },
     {
-        "featureType": "road.highway",
-        "elementType": "labels.text.fill",
+        "featureType": "all",
+        "elementType": "labels.text.stroke",
         "stylers": [
             {
                 "visibility": "on"
             },
             {
-                "color": "#d16a00"
-            }
-        ]
-    },
-    {
-        "featureType": "road.arterial",
-        "elementType": "labels.text.fill",
-        "stylers": [
-            {
-                "visibility": "on"
+                "color": "#ffffff"
             },
             {
-                "color": "#d16a00"
+                "lightness": 16
             }
         ]
     },
     {
-        "featureType": "road.arterial",
+        "featureType": "all",
         "elementType": "labels.icon",
         "stylers": [
             {
@@ -145,32 +73,140 @@ function initializeGoogleMaps() {
         ]
     },
     {
-        "featureType": "road.local",
-        "elementType": "labels.text.fill",
+        "featureType": "administrative",
+        "elementType": "geometry.fill",
         "stylers": [
             {
-                "color": "#d16a00"
+                "color": "#fefefe"
+            },
+            {
+                "lightness": 20
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#fefefe"
+            },
+            {
+                "lightness": 17
+            },
+            {
+                "weight": 1.2
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#f5f5f5"
+            },
+            {
+                "lightness": 20
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#f5f5f5"
+            },
+            {
+                "lightness": 21
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#ccedc8"
+            },
+            {
+                "lightness": 21
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 17
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 29
+            },
+            {
+                "weight": 0.2
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 18
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "lightness": 16
             }
         ]
     },
     {
         "featureType": "transit",
-        "elementType": "all",
+        "elementType": "geometry",
         "stylers": [
             {
-                "visibility": "off"
+                "color": "#f2f2f2"
+            },
+            {
+                "lightness": 19
             }
         ]
     },
     {
         "featureType": "water",
-        "elementType": "all",
+        "elementType": "geometry",
         "stylers": [
             {
-                "color": "#ffb100"
+                "color": "#e0eff8"
             },
             {
-                "visibility": "on"
+                "lightness": 17
             }
         ]
     }
@@ -199,7 +235,7 @@ function createStation(stationObject) {
       map: map,
       icon: {
         path: 'M1.0658141e-14,-54 C-11.0283582,-54 -20,-44.5228029 -20,-32.873781 C-20,-19.2421314 -1.49104478,-1.30230657 -0.703731343,-0.612525547 L-0.00447761194,-7.10542736e-15 L0.697761194,-0.608583942 C1.48656716,-1.29048175 20,-19.0458394 20,-32.873781 C20,-44.5228029 11.0276119,-54 1.0658141e-14,-54 L1.0658141e-14,-54 Z',
-        fillColor: '#FFFFFF',
+        fillColor: '#FCBC19',
         fillOpacity: 1,
         scale: 1.1,
         strokeWeight: 0
