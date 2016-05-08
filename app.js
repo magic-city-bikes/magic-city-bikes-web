@@ -6,7 +6,7 @@ import Transport from 'lokka-transport-http'
 import {MongoClient} from 'mongodb'
 
 var stationCache = null
-var db = null
+var database = null
 
 const HSL_GRAPHQL_URL = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql'
 const app = express()
@@ -43,9 +43,8 @@ function refreshStationCache() {
 
 function saveStations() {
   if (stationCache) {
-    console.log(db)
     const stations = stationCache.bikeRentalStations
-    db.collection('stations').insertOne(stations, (err, result) => {})
+    database.collection('stations').insertOne(stations, (err, result) => {})
   }
 }
 
@@ -53,8 +52,8 @@ function startStationSaving() {
   if (process.env.MONGODB_URI) {
     MongoClient.connect(process.env.MONGODB_URI, (err, db) => {
       if (!err) {
-        db = db
-        console.log("Connected to MongoDB", db)
+        database = db
+        console.log("Connected to MongoDB")
         setInterval(saveStations, 60 * 1000)
       } else {
         console.error(err)
