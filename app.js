@@ -54,6 +54,8 @@ function startStationSaving() {
         db = db
         console.log("Connected to MongoDB");
         setInterval(saveStations, 60 * 1000)
+      } else {
+        console.error(err)
       }
     })
   }
