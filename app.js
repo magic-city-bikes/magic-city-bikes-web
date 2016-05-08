@@ -43,9 +43,7 @@ function refreshStationCache() {
 
 function saveStations() {
   if (stationCache) {
-    console.log('saving', stationCache.length)
-    const stations = stationCache.bikeRentalStations
-    database.collection('stations').insertOne(stations, (err, result) => {console.log(err, result)})
+    database.collection('stations').insertOne(stationCache, (err, result) => {})
   }
 }
 
