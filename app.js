@@ -3,7 +3,7 @@ import express from 'express'
 import compress from 'compression'
 import Lokka from 'lokka'
 import Transport from 'lokka-transport-http'
-// import pg from 'pg'
+import {MongoClient} from 'mongodb'
 
 var stationCache = null
 
@@ -36,29 +36,31 @@ function refreshStationCache() {
     }
   `).then(result => {
     stationCache = result
-    // spacesavailable on kokonaismäärä, siit miinus
     setTimeout(refreshStationCache, 10 * 1000)
   })
 }
 
-// pg.defaults.ssl = true
-// function saveStations() {
-//   pg.connect(process.env.DATABASE_URL, function(err, client) {
-//     if (err) throw err
-//     console.log('Connected to postgres! Getting schemas...')
+function saveStations(db) {
+  if (stationCache) {
+    db.collection('stations').insertOne(stationCache.bikeRentalStations, (err, result) => {})
+  }
+}
 
-//     client
-//       .query('SELECT table_schema,table_name FROM information_schema.tables')
-//       .on('row', function(row) {
-//         console.log(JSON.stringify(row))
-//       })
-//   })
-// }
+function startStationSaving() {
+  if (process.env.MONGODB_URI) {
+    MongoClient.connect(process.env.MONGODB_URI, (err, db) => {
+      if (!err) {
+        console.log("Connected to MongoDB");
+        setInterval(saveStations, 60 * 1000)
+      }
+    })
+  }
+}
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`Tsygät.fi listening on *:${port}`)
   refreshStationCache()
-  // setInterval(saveStations, 10 * 1000)
+  startStationSaving()
 })
 
