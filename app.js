@@ -10,7 +10,7 @@ var database = null
 
 const HSL_GRAPHQL_URL = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql'
 const app = express()
-const client = new Lokka({
+const graphQLClient = new Lokka({
   transport: new Transport(HSL_GRAPHQL_URL)
 })
 
@@ -24,7 +24,7 @@ app.get('/api/stations', (req, res) => {
 })
 
 function refreshStationCache() {
-  client.query(`
+  graphQLClient.query(`
     {
       bikeRentalStations {
         id,
@@ -37,7 +37,6 @@ function refreshStationCache() {
     }
   `).then(result => {
     stationCache = result
-    setTimeout(refreshStationCache, 10 * 1000)
   })
 }
 
@@ -70,6 +69,7 @@ function startStationSaving() {
 const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`Tsygät.fi listening on *:${port}`)
+  setInterval(refreshStationCache, 10 * 1000)
   refreshStationCache()
   startStationSaving()
 })
