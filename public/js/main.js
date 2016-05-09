@@ -43,10 +43,6 @@ function initializeGoogleMaps() {
   var mapElement = document.getElementById('map-canvas')
   map = new google.maps.Map(mapElement, mapOptions)
 
-  // google.maps.event.addListener(map, 'zoom_changed', function() {
-  //   console.log(map.getZoom())
-  // })
-
   getUserGPSLocation()
 }
 
@@ -197,15 +193,14 @@ function toggleSidebar() {
 }
 
 function initializeApp() {
-  initializeGoogleMaps()
-  getJSON('/api/stations', function(data) {
-    // handle no data from server
-    // joku intervalli toho datan refreshii 60s hyvä
-    data.bikeRentalStations.map(createStation)
-  })
   document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar)
   document.getElementById('sidebar-close').addEventListener('click', toggleSidebar)
 
+  initializeGoogleMaps()
+
+  getJSON('/api/stations', function(data) {
+    data.bikeRentalStations.map(createStation)
+  })
 }
 
 function ready(fn) {
