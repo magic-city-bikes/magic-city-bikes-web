@@ -192,6 +192,10 @@ function getJSON(url, callback) {
   request = null
 }
 
+function toggleSidebar() {
+  document.querySelectorAll('.sidebar')[0].classList.toggle('visible')
+}
+
 function initializeApp() {
   initializeGoogleMaps()
   getJSON('/api/stations', function(data) {
@@ -199,6 +203,9 @@ function initializeApp() {
     // joku intervalli toho datan refreshii 60s hyvä
     data.bikeRentalStations.map(createStation)
   })
+  document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar)
+  document.getElementById('sidebar-close').addEventListener('click', toggleSidebar)
+
 }
 
 function ready(fn) {
