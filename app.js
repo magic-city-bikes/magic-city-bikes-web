@@ -42,7 +42,8 @@ function refreshStationCache() {
 
 function saveStations() {
   if (stationCache) {
-    const stationsWithTimestamp = _.extend({},
+    const stationsWithTimestamp = _.extend(
+      {},
       stationCache,
       {
         timestamp: new Date().getTime()
@@ -68,7 +69,7 @@ function startStationSaving() {
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {
-  console.log(`Tsygät.fi listening on *:${port}`)
+  console.log(`Kaupunkifillarit.fi listening on *:${port}`)
   setInterval(refreshStationCache, 10 * 1000)
   refreshStationCache()
   startStationSaving()
