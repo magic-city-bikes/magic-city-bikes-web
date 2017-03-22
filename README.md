@@ -7,13 +7,13 @@ Citybikes rolled to the streets of Helsinki in the summer of 2016. They gained p
 
 This popularity was a nuisance so we made a service to check the availability status on all bike stations. The contributors are: Sampsa Kuronen (backend + web / this repository), Antero Päärni (gfx), Lauri Piispanen ([iOS](https://github.com/lauripiispanen/kaupunkifillarit-ios)) and Hannu Leinonen ([Android](https://github.com/hleinone/kaupunkifillarit-android)).
 
-The data is open data provided by [HSL](http://dev.hsl.fi/).
+The data is open data as provided by [HSL](http://dev.hsl.fi/).
 
 ## Development
 
     nvm install
     npm install
-    npm start / npm run watch
+    npm start || npm run watch
 
 ## Sponsored by Reaktor
 
