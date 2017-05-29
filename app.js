@@ -1,9 +1,10 @@
-import _ from 'lodash'
-import express from 'express'
-import compress from 'compression'
-import Lokka from 'lokka'
-import Transport from 'lokka-transport-http'
-import {MongoClient} from 'mongodb'
+const _ = require('lodash')
+const express = require('express')
+const compress = require('compression')
+const Lokka = require('lokka').Lokka
+const Transport = require('lokka-transport-http').Transport
+const helmet = require('helmet')
+const MongoClient = require('mongodb').MongoClient
 
 var stationCache = null
 var database = null
@@ -16,6 +17,7 @@ const graphQLClient = new Lokka({
 
 app.disable('x-powered-by')
 app.use(compress())
+app.use(helmet())
 app.use(express.static('./public', {maxAge: 30 * 60 * 1000}))
 
 app.get('/api/stations', (req, res) => {
