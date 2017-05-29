@@ -12,7 +12,7 @@ The data is open data as provided by [HSL](http://dev.hsl.fi/).
 ## Development
 
     nvm install
-    npm install
+    yarn install
     npm start || npm run watch
 
 ## Sponsored by Reaktor
