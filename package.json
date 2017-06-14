@@ -15,10 +15,11 @@
     "helmet": "3.6.1",
     "lodash": "4.17.4",
     "lokka": "1.7.0",
+    "lokka-transport-http": "1.6.1",
     "mongodb": "2.2.25",
     "nodemon": "1.11.0"
   },
   "engines": {
-    "node": "7"
+    "node": "8"
   }
 }
