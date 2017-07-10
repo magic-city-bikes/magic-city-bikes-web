@@ -47,9 +47,9 @@ function initializeGoogleMaps() {
 }
 
 function createStation(stationObject) {
-  function createStationMarker(bikesAvailable, totalSpaces) {
-    var labelContent = '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>'
-    var labelColor = bikesAvailable >= 2 ? '#FCBC19' : '#D4D4D4'
+  function createStationMarker(bikesAvailable) {
+    var labelContent = '<div class="count">' + bikesAvailable + '</div>'
+    var labelColor = bikesAvailable >= 2 ? '#FCBC19' : '#b9b9b9'
 
     var stationMarker = new MarkerWithLabel({
       position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
@@ -58,10 +58,10 @@ function createStation(stationObject) {
         path: 'M1.0658141e-14,-54 C-11.0283582,-54 -20,-44.5228029 -20,-32.873781 C-20,-19.2421314 -1.49104478,-1.30230657 -0.703731343,-0.612525547 L-0.00447761194,-7.10542736e-15 L0.697761194,-0.608583942 C1.48656716,-1.29048175 20,-19.0458394 20,-32.873781 C20,-44.5228029 11.0276119,-54 1.0658141e-14,-54 L1.0658141e-14,-54 Z',
         fillColor: labelColor,
         fillOpacity: 1,
-        scale: 1.1,
+        scale: 0.8,
         strokeWeight: 0
       },
-      labelAnchor: new google.maps.Point(20, 43),
+      labelAnchor: new google.maps.Point(20, 33),
       labelContent: labelContent
     })
 
@@ -70,8 +70,7 @@ function createStation(stationObject) {
 
   var spacesAvailable = parseInt(stationObject.spacesAvailable)
   var bikesAvailable = parseInt(stationObject.bikesAvailable)
-  var totalSpaces = spacesAvailable + bikesAvailable
-  createStationMarker(bikesAvailable, totalSpaces)
+  createStationMarker(bikesAvailable)
 }
 
 function outsideOperationTheatre(position) {

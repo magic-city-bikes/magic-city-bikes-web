@@ -981,7 +981,7 @@ lodash@4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
-lokka-transport-http@^1.6.1:
+lokka-transport-http@1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/lokka-transport-http/-/lokka-transport-http-1.6.1.tgz#0dfbc2dc9e825f6e5821830f3f3f7f3f83a4ad65"
   dependencies:
