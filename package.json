@@ -3,20 +3,20 @@
   "version": "1.0.0",
   "description": "Kaupunkifillarit.fi backend and web frontend",
   "main": "app.js",
-  "repository": "https://gitlab.com/kaupunkifillarit/kaupunkifillarit",
+  "repository": "https://github.com/sampsakuronen/kaupunkifillarit-web.git",
   "license": "MIT",
   "scripts": {
     "start": "node app.js",
     "watch": "./node_modules/.bin/nodemon app.js"
   },
   "dependencies": {
-    "compression": "1.6.2",
-    "express": "^4.15.3",
+    "compression": "1.7.0",
+    "express": "4.15.3",
     "helmet": "3.6.1",
     "lodash": "4.17.4",
     "lokka": "1.7.0",
     "lokka-transport-http": "1.6.1",
-    "mongodb": "^2.2.30",
+    "mongodb": "2.2.30",
     "nodemon": "1.11.0"
   },
   "engines": {
