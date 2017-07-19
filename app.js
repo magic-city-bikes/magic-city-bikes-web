@@ -15,7 +15,6 @@ const graphQLClient = new Lokka({
   transport: new Transport(HSL_GRAPHQL_URL)
 })
 
-app.disable('x-powered-by')
 app.use(compress())
 app.use(helmet())
 app.use(express.static('./public', {maxAge: 30 * 60 * 1000}))
