@@ -6,10 +6,9 @@ const Transport = require('lokka-transport-http').Transport
 const helmet = require('helmet')
 
 var stationCache = null
-var database = null
 
-const HSL_GRAPHQL_URL = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql'
 const app = express()
+const HSL_GRAPHQL_URL = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql'
 const graphQLClient = new Lokka({
   transport: new Transport(HSL_GRAPHQL_URL)
 })
@@ -19,8 +18,8 @@ app.use(helmet())
 app.use(express.static('./public', {maxAge: 30 * 60 * 1000}))
 
 app.get('/api/stations', (req, res) => {
-  res.setHeader('Cache-Control', 'public, max-age=10')
-  res.send(stationCache)
+  res.setHeader('Cache-Control', 'public, max-age=5')
+  res.json(stationCache)
 })
 
 function refreshStationCache() {
