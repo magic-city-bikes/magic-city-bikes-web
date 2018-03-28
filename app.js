@@ -43,7 +43,7 @@ function refreshStationCache() {
 const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`Kaupunkifillarit.fi listening on *:${port}`)
-  setInterval(refreshStationCache, 10 * 1000)
+  setInterval(refreshStationCache, 5 * 1000)
   refreshStationCache()
 })
 
