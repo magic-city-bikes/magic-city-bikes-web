@@ -13,7 +13,7 @@ The data is open data as provided by [HSL](http://dev.hsl.fi/).
 
     nvm install
     yarn install
-    npm start || npm run watch
+    yarn start || yarn run watch
 
 ## Sponsored by Reaktor
 
@@ -21,7 +21,7 @@ Thank you [Reaktor](https://reaktor.com/careers/) for letting me use some of my 
 
 ## Licence
 
-Copyright 2016 Sampsa Kuronen
+Copyright 2016-2018 Sampsa Kuronen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
