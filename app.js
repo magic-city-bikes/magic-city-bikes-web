@@ -4,7 +4,6 @@ const compress = require('compression')
 const Lokka = require('lokka').Lokka
 const Transport = require('lokka-transport-http').Transport
 const helmet = require('helmet')
-const MongoClient = require('mongodb').MongoClient
 
 var stationCache = null
 var database = null
@@ -41,38 +40,10 @@ function refreshStationCache() {
   })
 }
 
-function saveStations() {
-  if (stationCache) {
-    const stationsWithTimestamp = _.extend(
-      {},
-      stationCache,
-      {
-        timestamp: new Date().getTime()
-      }
-    )
-    database.collection('stations').insertOne(stationsWithTimestamp, (err, result) => {})
-  }
-}
-
-function startStationSaving() {
-  if (process.env.MONGODB_URI) {
-    MongoClient.connect(process.env.MONGODB_URI, (err, db) => {
-      if (!err) {
-        database = db
-        console.log("Connected to MongoDB")
-        setInterval(saveStations, 60 * 1000)
-      } else {
-        console.error(err)
-      }
-    })
-  }
-}
-
 const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`Kaupunkifillarit.fi listening on *:${port}`)
   setInterval(refreshStationCache, 10 * 1000)
   refreshStationCache()
-  startStationSaving()
 })
 
