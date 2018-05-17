@@ -37,7 +37,9 @@ function getUserGPSLocation() {
     frequency: 1000
   }
 
-  navigator.geolocation.watchPosition(geolocationSuccess, function(){}, geolocationOptions)
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(geolocationSuccess, function(){}, geolocationOptions)
+  }
 }
 
 function initializeGoogleMaps() {
