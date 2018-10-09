@@ -12,8 +12,8 @@ The data is open data as provided by [HSL](http://dev.hsl.fi/) and [Föli](http:
 ## Development
 
     nvm install
-    yarn install
-    yarn start || yarn run watch
+    npm install
+    npm start || npm run watch
 
 ## Sponsored by Reaktor
 

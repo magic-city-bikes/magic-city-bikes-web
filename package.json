@@ -10,16 +10,16 @@
     "watch": "./node_modules/.bin/nodemon app.js"
   },
   "dependencies": {
-    "compression": "1.7.2",
+    "compression": "1.7.3",
     "express": "4.16.3",
-    "helmet": "3.12.0",
-    "lodash": "4.17.5",
+    "helmet": "3.13.0",
+    "lodash": "4.17.11",
     "lokka": "1.7.0",
     "lokka-transport-http": "1.6.1",
     "node-fetch": "^2.1.2",
-    "nodemon": "1.17.2"
+    "nodemon": "1.18.4"
   },
   "engines": {
-    "node": "9"
+    "node": "10"
   }
 }
