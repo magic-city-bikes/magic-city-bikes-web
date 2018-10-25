@@ -11,6 +11,7 @@
   "dependencies": {
     "compression": "1.7.3",
     "express": "4.16.3",
+    "fs": "0.0.1-security",
     "helmet": "3.13.0",
     "lodash": "4.17.11",
     "lokka": "1.7.0",

@@ -71,10 +71,11 @@ function initializeGoogleMaps() {
   getUserGPSLocation()
 }
 
-function createStation(stationObject) {
+function createStation(stationObject, estimates) {
   var bikesAvailable = parseInt(stationObject.bikesAvailable)
   var labelContent = '<div class="count">' + bikesAvailable + '</div>'
   var labelColor = bikesAvailable >= 2 ? '#FCBC19' : '#b9b9b9'
+  console.log(stationObject.stationId)
 
   var stationMarker = new MarkerWithLabel({
     position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
@@ -91,7 +92,7 @@ function createStation(stationObject) {
   })
 
   var infoWindow = new google.maps.InfoWindow({
-    content: 'hello, world!'
+    content: estimates[stationObject.stationId]
   })
 
   stationMarker.addListener('click', function() {
@@ -191,7 +192,7 @@ function initializeApp() {
   initializeGoogleMaps()
 
   getJSON('/api/stations', function(data) {
-    data.bikeRentalStations.map(createStation)
+    data.bikeRentalStations.map((station) => createStation(station, data.waitEstimates))
   })
 }
 

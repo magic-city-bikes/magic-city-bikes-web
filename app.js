@@ -8,8 +8,11 @@ const fetch = require('node-fetch')
 const moment = require('moment')
 const xmlJS = require('xml-js')
 
-let stationCaches = {}
 let weatherCache = {temperature: 10.0, rain: 0.0}
+const fs = require('fs')
+
+let stationCaches = {}
+let currentEstimates = {}
 
 const app = express()
 const HSL_GRAPHQL_URL = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql'
@@ -27,8 +30,10 @@ app.use(express.static('./public', {maxAge: 30 * 60 * 1000}))
 app.get('/api/stations', (req, res) => {
   setWeatherCache()
   res.setHeader('Cache-Control', 'public, max-age=5')
+  console.log(currentEstimates)
   res.json({
-    bikeRentalStations: _.flatMap(Object.values(stationCaches), cache => cache.bikeRentalStations)
+    bikeRentalStations: _.flatMap(Object.values(stationCaches), cache => cache.bikeRentalStations),
+    waitEstimates: currentEstimates
   })
 })
 
@@ -71,6 +76,7 @@ function refreshStationCacheFoli() {
     .then(racks => ({
         bikeRentalStations: racks.map(rack => ({
           id: rack.id,
+          stationId: rack.stationId,
           name: rack.name,
           lat: rack.lat,
           lon: rack.lon,
@@ -100,6 +106,50 @@ function refreshStationCacheHSL() {
   })
 }
 
+function readFiles(dirname, resolve, reject) {
+  files = fs.readdirSync(dirname),
+  files.forEach(function(file) {
+    if (file.endsWith(".json")) {
+      const data = fs.readFileSync(dirname + file, 'utf8');
+      resolve(data)
+    }
+  });
+}
+
+function getEstimates() {
+  let estimatesByName = {}
+  readFiles('../projekti/data/estimates/', function(content) {
+    try {
+      const estimateArray = JSON.parse(content)
+      const name = estimateArray[0].name
+      // group by station id, weekday and hour
+      var grouped = _.mapValues(_.groupBy(estimateArray, 'name'), list =>_.mapValues(_.groupBy(list, 'weekday'), daylist =>_.mapValues(_.groupBy(daylist, 'hour'))))
+      estimatesByName[name] = grouped[name]
+    } catch (e) {
+      console.log('error parsing file: ' + e)
+    }
+  }, function(err) {
+    console.log('problem getting file ', err)
+  })
+  return estimatesByName
+}
+
+function getCurrentEstimate() {
+  const estimatesByName = getEstimates()
+  const currentTime = new Date()
+  const day = currentTime.getUTCDay()
+  // Sunday is 0, Monday 1, but in our data Monday is 0
+  const dayFromMonday = day == 0 ? 6 : day - 1
+  const hour = currentTime.getUTCHours()
+  Object.keys(estimatesByName).forEach(name => {
+    try {
+      currentEstimates[name] = estimatesByName[name][dayFromMonday][hour][0]
+    } catch (e) {
+      console.log('could not get estimate for ' + name)
+    }
+  })
+}
+
 function refreshStationCaches() {
   // Update caches independently in order to isolate possible API hickups.
   refreshStationCacheFoli()
@@ -107,6 +157,7 @@ function refreshStationCaches() {
 }
 
 const port = process.env.PORT || 3000
+getCurrentEstimate()
 app.listen(port, () => {
   console.log(`Kaupunkifillarit.fi listening on *:${port}`)
   setInterval(refreshStationCaches, 5 * 1000)
