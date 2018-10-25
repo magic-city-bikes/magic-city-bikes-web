@@ -90,6 +90,14 @@ function createStation(stationObject) {
     labelContent: labelContent
   })
 
+  var infoWindow = new google.maps.InfoWindow({
+    content: 'hello, world!'
+  })
+
+  stationMarker.addListener('click', function() {
+    infoWindow.open(map, stationMarker);
+  })
+
   markers.push(stationMarker)
 }
 

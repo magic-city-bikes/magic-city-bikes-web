@@ -1,10 +1,9 @@
 {
-  "name": "kaupunkifillarit",
+  "name": "magic-city-bikes-web",
   "version": "1.0.0",
-  "description": "Kaupunkifillarit.fi backend and web frontend",
+  "description": "",
   "main": "app.js",
-  "repository": "https://github.com/sampsakuronen/kaupunkifillarit-web.git",
-  "license": "MIT",
+  "repository": "https://github.com/magic-city-bikes/magic-city-bikes-web",
   "scripts": {
     "start": "node app.js",
     "watch": "./node_modules/.bin/nodemon app.js"
@@ -16,8 +15,10 @@
     "lodash": "4.17.11",
     "lokka": "1.7.0",
     "lokka-transport-http": "1.6.1",
+    "moment": "^2.22.2",
     "node-fetch": "^2.1.2",
-    "nodemon": "1.18.4"
+    "nodemon": "1.18.4",
+    "xml-js": "^1.6.8"
   },
   "engines": {
     "node": "10"
