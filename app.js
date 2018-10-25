@@ -8,11 +8,14 @@ const fetch = require('node-fetch')
 const moment = require('moment')
 const xmlJS = require('xml-js')
 
-let weatherCache = {temperature: 10.0, rain: 0.0}
 const fs = require('fs')
 
+require('dotenv').config()
+
+let weatherCache = {temperature: 10.0, rain: 0.0}
 let stationCaches = {}
-let currentEstimates = {}
+let currentEstimatesCache = {}
+let estimatesByNameCache = {}
 
 const app = express()
 const HSL_GRAPHQL_URL = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql'
@@ -30,10 +33,9 @@ app.use(express.static('./public', {maxAge: 30 * 60 * 1000}))
 app.get('/api/stations', (req, res) => {
   setWeatherCache()
   res.setHeader('Cache-Control', 'public, max-age=5')
-  console.log(currentEstimates)
   res.json({
     bikeRentalStations: _.flatMap(Object.values(stationCaches), cache => cache.bikeRentalStations),
-    waitEstimates: currentEstimates
+    waitEstimates: currentEstimatesCache
   })
 })
 
@@ -116,36 +118,55 @@ function readFiles(dirname, resolve, reject) {
   });
 }
 
-function getEstimates() {
-  let estimatesByName = {}
-  readFiles('../projekti/data/estimates/', function(content) {
+function setEstimatesCache() {
+  readFiles(process.env.DATA_PATH, function(content) {
     try {
       const estimateArray = JSON.parse(content)
       const name = estimateArray[0].name
       // group by station id, weekday and hour
       var grouped = _.mapValues(_.groupBy(estimateArray, 'name'), list =>_.mapValues(_.groupBy(list, 'weekday'), daylist =>_.mapValues(_.groupBy(daylist, 'hour'))))
-      estimatesByName[name] = grouped[name]
+      estimatesByNameCache[name] = grouped[name]
     } catch (e) {
-      console.log('error parsing file: ' + e)
+      console.error('error parsing file: ' + e)
     }
   }, function(err) {
-    console.log('problem getting file ', err)
+    console.error('problem getting file ', err)
   })
-  return estimatesByName
 }
 
-function getCurrentEstimate() {
-  const estimatesByName = getEstimates()
+function setCurrentEstimateCache() {
+  if (_.isEmpty(estimatesByNameCache)) {
+    setEstimatesCache()
+  }
   const currentTime = new Date()
   const day = currentTime.getUTCDay()
   // Sunday is 0, Monday 1, but in our data Monday is 0
   const dayFromMonday = day == 0 ? 6 : day - 1
   const hour = currentTime.getUTCHours()
-  Object.keys(estimatesByName).forEach(name => {
+  Object.keys(estimatesByNameCache).forEach(name => {
     try {
-      currentEstimates[name] = estimatesByName[name][dayFromMonday][hour][0]
+      // choose estimate based on current weather
+      const allEstimates = estimatesByNameCache[name][dayFromMonday][hour][0]
+      const rainLimit = allEstimates.rain_limit
+      const tempLimit = allEstimates.temp_limit
+      // these estimates are based on most data
+      // Finland is a cold country
+      let estimates = {
+        'brought': allEstimates.cold_bike_brought,
+        'taken': allEstimates.cold_bike_taken
+      }
+      // prioritize rain: assume that even if is warm and rainy, people don't bike as much
+      if (weatherCache.rain > rainLimit ) {
+        estimates.brought = allEstimates.rain_bike_brought
+        estimates.taken = allEstimates.rain_bike_taken
+      } else if (weatherCache.temperature > tempLimit) {
+        estimates.brought = allEstimates.warm_bike_brought
+        estimates.taken = allEstimates.warm_bike_taken
+      }
+      currentEstimatesCache[name] = estimates
     } catch (e) {
-      console.log('could not get estimate for ' + name)
+      console.error('could not get estimate for ' + name)
+      console.log(e)
     }
   })
 }
@@ -156,10 +177,17 @@ function refreshStationCaches() {
   refreshStationCacheHSL()
 }
 
+function refreshEstimates() {
+  setWeatherCache()
+  setCurrentEstimateCache()
+}
+
 const port = process.env.PORT || 3000
-getCurrentEstimate()
 app.listen(port, () => {
   console.log(`Kaupunkifillarit.fi listening on *:${port}`)
   setInterval(refreshStationCaches, 5 * 1000)
+  // refresh weather and estimations once an hour
+  setInterval(refreshEstimates, 10 * 1000 )
   refreshStationCaches()
+  refreshEstimates()
 })

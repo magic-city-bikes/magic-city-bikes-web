@@ -1,12 +1,14 @@
 # Magic City Bikes
 
-Introduction to Data Science mini project. Predicting the time it takes for the next HSL city bike to be brought to or taken away from a city bike station.
+Introduction to Data Science mini project. Predicting the time it takes for the next HSL city bike to be brought to or taken away from a city bike station. The estimates are calculated using the exponential distribution, which the waiting files follow. The parameter is learn based on historical data.
 
 ## Development
 
     nvm install
     npm install
     npm run watch
+
+Define the path to your estimate file with the env varialble `DATA_PATH`. The variable is assumed to point to a folder containing estimates as JSON arrays for each hour and weekday.
 
 
 ## Licence

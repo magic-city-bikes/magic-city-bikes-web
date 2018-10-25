@@ -75,7 +75,6 @@ function createStation(stationObject, estimates) {
   var bikesAvailable = parseInt(stationObject.bikesAvailable)
   var labelContent = '<div class="count">' + bikesAvailable + '</div>'
   var labelColor = bikesAvailable >= 2 ? '#FCBC19' : '#b9b9b9'
-  console.log(stationObject.stationId)
 
   var stationMarker = new MarkerWithLabel({
     position: new google.maps.LatLng(stationObject.lat, stationObject.lon),
@@ -91,8 +90,27 @@ function createStation(stationObject, estimates) {
     labelContent: labelContent
   })
 
+  const estimate = estimates[stationObject.name]
+
+  let estimateContent = 'No estimate :('
+  if (estimate) {
+    let bikeBrought = '-'
+    let bikeTaken = '-'
+    if ('brought' in estimate) {
+      const brought = parseInt(estimate['brought'])
+      bikeBrought = brought < 60 ? brought : '> 60'
+    }
+    if ('taken' in estimate) {
+      const taken = parseInt(estimate['taken'])
+      bikeTaken = taken < 60 ? taken : '> 60'
+    }
+
+    estimateContent = `new bike in ${bikeBrought} mins, bike taken in ${bikeTaken} mins`
+
+  }
+
   var infoWindow = new google.maps.InfoWindow({
-    content: estimates[stationObject.stationId]
+    content: estimateContent
   })
 
   stationMarker.addListener('click', function() {
