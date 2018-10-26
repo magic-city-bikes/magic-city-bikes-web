@@ -94,19 +94,17 @@ function createStation(stationObject, estimates) {
 
   let estimateContent = 'No estimate :('
   if (estimate) {
-    let bikeBrought = '-'
-    let bikeTaken = '-'
+    estimateContent = ''
     if ('brought' in estimate) {
       const brought = parseInt(estimate['brought'])
-      bikeBrought = brought < 60 ? brought : '> 60'
+      const bikeBrought = brought < 60 ? brought : '> 60'
+      estimateContent += `new bike in ${bikeBrought} mins`
     }
-    if ('taken' in estimate) {
+    if ('taken' in estimate && bikesAvailable > 0) {
       const taken = parseInt(estimate['taken'])
-      bikeTaken = taken < 60 ? taken : '> 60'
+      const bikeTaken = taken < 60 ? taken : '> 60'
+      estimateContent += `, bike taken in ${bikeTaken} mins`
     }
-
-    estimateContent = `new bike in ${bikeBrought} mins, bike taken in ${bikeTaken} mins`
-
   }
 
   var infoWindow = new google.maps.InfoWindow({

@@ -164,9 +164,9 @@ function setCurrentEstimateCache() {
         estimates.taken = allEstimates.warm_bike_taken
       }
       currentEstimatesCache[name] = estimates
+      console.log('got estimate for ' + name)
     } catch (e) {
       console.error('could not get estimate for ' + name)
-      console.log(e)
     }
   })
 }
