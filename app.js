@@ -10,8 +10,6 @@ const xmlJS = require('xml-js')
 
 const fs = require('fs')
 
-require('dotenv').config()
-
 let weatherCache = {temperature: 10.0, rain: 0.0}
 let stationCaches = {}
 let currentEstimatesCache = {}
@@ -119,7 +117,7 @@ function readFiles(dirname, resolve, reject) {
 }
 
 function setEstimatesCache() {
-  readFiles(process.env.DATA_PATH, function(content) {
+  readFiles('./data/', function(content) {
     try {
       const estimateArray = JSON.parse(content)
       const name = estimateArray[0].name
@@ -167,6 +165,7 @@ function setCurrentEstimateCache() {
       console.log('got estimate for ' + name)
     } catch (e) {
       console.error('could not get estimate for ' + name)
+      console.error(e)
     }
   })
 }
