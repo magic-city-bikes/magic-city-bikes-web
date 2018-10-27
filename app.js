@@ -187,7 +187,7 @@ app.listen(port, () => {
   console.log(`Kaupunkifillarit.fi listening on *:${port}`)
   setInterval(refreshStationCaches, 5 * 1000)
   // refresh weather and estimations once an hour
-  setInterval(refreshEstimates, 10 * 1000 )
+  setInterval(refreshEstimates, 10 * 10 * 1000 )
   refreshStationCaches()
   refreshEstimates()
 })
