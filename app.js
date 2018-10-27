@@ -165,7 +165,6 @@ function setCurrentEstimateCache() {
       console.log('got estimate for ' + name)
     } catch (e) {
       console.error('could not get estimate for ' + name)
-      console.error(e)
     }
   })
 }
